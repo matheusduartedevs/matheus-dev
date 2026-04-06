@@ -1,0 +1,27 @@
+:root {
+  --font-sans:
+    'Inter', 'SF Pro Display', 'Segoe UI', 'Ubuntu', 'Cantarell', 'Noto Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Cascadia Code', 'Fira Code', 'Ubuntu Mono', monospace;
+
+  --radius-panel: 1.25rem;
+  --radius-window: 1.75rem;
+
+  --color-bg: #0f172a;
+  --color-bg-alt: #131c31;
+  --color-bg-highlight: rgba(96, 165, 250, 0.32);
+  --color-surface: rgba(15, 23, 42, 0.84);
+  --color-surface-alt: rgba(30, 41, 59, 0.92);
+  --color-border-subtle: rgba(148, 163, 184, 0.2);
+  --color-border-strong: rgba(148, 163, 184, 0.34);
+  --color-text: #e5eefc;
+  --color-text-muted: rgba(226, 232, 240, 0.74);
+  --color-accent: #60a5fa;
+  --color-accent-contrast: #08111f;
+  --color-window-titlebar: rgba(15, 23, 42, 0.9);
+  --color-window-shadow: rgba(15, 23, 42, 0.34);
+
+  --color-terminal-bg: #06111f;
+  --color-terminal-text: #b6ffcb;
+
+  --shadow-window: 0 24px 60px var(--color-window-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}

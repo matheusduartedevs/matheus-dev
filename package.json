@@ -1,6 +1,6 @@
 {
   "name": "-matheus-dev",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -15,6 +15,9 @@
     "format": "prettier --write --experimental-cli src/"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.2.2",
+    "pinia": "^3.0.4",
+    "tailwindcss": "^4.2.2",
     "vue": "^3.5.31"
   },
   "devDependencies": {

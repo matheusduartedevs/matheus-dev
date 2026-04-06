@@ -1,0 +1,17 @@
+[data-os-theme='macos'] {
+  --color-bg: #eef2f7;
+  --color-bg-alt: #dfe6ef;
+  --color-bg-highlight: rgba(123, 152, 183, 0.24);
+  --color-surface: rgba(255, 255, 255, 0.72);
+  --color-surface-alt: rgba(248, 250, 252, 0.88);
+  --color-border-subtle: rgba(103, 116, 138, 0.16);
+  --color-border-strong: rgba(103, 116, 138, 0.28);
+  --color-text: #122033;
+  --color-text-muted: rgba(18, 32, 51, 0.62);
+  --color-accent: #3a8bff;
+  --color-accent-contrast: #f8fbff;
+  --color-window-titlebar: rgba(255, 255, 255, 0.74);
+  --color-window-shadow: rgba(82, 97, 118, 0.18);
+  --color-terminal-bg: #10151f;
+  --color-terminal-text: #d6ffe5;
+}

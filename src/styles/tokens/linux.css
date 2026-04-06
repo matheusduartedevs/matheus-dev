@@ -1,0 +1,17 @@
+[data-os-theme='linux'] {
+  --color-bg: #211a23;
+  --color-bg-alt: #32263a;
+  --color-bg-highlight: rgba(255, 132, 69, 0.26);
+  --color-surface: rgba(31, 24, 36, 0.84);
+  --color-surface-alt: rgba(52, 39, 60, 0.92);
+  --color-border-subtle: rgba(255, 178, 145, 0.18);
+  --color-border-strong: rgba(255, 178, 145, 0.3);
+  --color-text: #fff4ec;
+  --color-text-muted: rgba(255, 226, 213, 0.72);
+  --color-accent: #ff8a4c;
+  --color-accent-contrast: #2b1207;
+  --color-window-titlebar: rgba(29, 22, 34, 0.92);
+  --color-window-shadow: rgba(18, 10, 22, 0.4);
+  --color-terminal-bg: #140f18;
+  --color-terminal-text: #ffe3a3;
+}

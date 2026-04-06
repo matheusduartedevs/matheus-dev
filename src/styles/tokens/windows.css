@@ -1,0 +1,17 @@
+[data-os-theme='windows'] {
+  --color-bg: #0d1733;
+  --color-bg-alt: #182449;
+  --color-bg-highlight: rgba(84, 172, 255, 0.36);
+  --color-surface: rgba(13, 26, 58, 0.82);
+  --color-surface-alt: rgba(26, 46, 87, 0.9);
+  --color-border-subtle: rgba(150, 208, 255, 0.2);
+  --color-border-strong: rgba(150, 208, 255, 0.34);
+  --color-text: #f4f8ff;
+  --color-text-muted: rgba(223, 235, 255, 0.78);
+  --color-accent: #5dc4ff;
+  --color-accent-contrast: #041423;
+  --color-window-titlebar: rgba(12, 26, 57, 0.92);
+  --color-window-shadow: rgba(6, 18, 45, 0.38);
+  --color-terminal-bg: #071320;
+  --color-terminal-text: #c6ffe4;
+}
