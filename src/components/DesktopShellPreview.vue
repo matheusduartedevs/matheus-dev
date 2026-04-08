@@ -1,8 +1,12 @@
 <script setup lang="ts">
+import { computed, ref } from 'vue'
+
+import AppWindow from '@/components/AppWindow.vue'
+import DesktopFooter from '@/components/DesktopFooter.vue'
 import type { PortfolioContent } from '@/types/portfolio'
 import type { OsTheme } from '@/types/theme'
 
-defineProps<{
+const props = defineProps<{
   content: PortfolioContent
   themes: readonly OsTheme[]
   detectedTheme: OsTheme
@@ -16,108 +20,136 @@ defineEmits<{
   selectTheme: [theme: OsTheme]
   clearTheme: []
 }>()
+
+const isBrowserOpen = ref(false)
+const isBrowserMinimized = ref(false)
+
+const openBrowser = () => {
+  isBrowserOpen.value = true
+  isBrowserMinimized.value = false
+}
+
+const minimizeBrowser = () => {
+  isBrowserMinimized.value = true
+}
+
+const closeBrowser = () => {
+  isBrowserOpen.value = false
+  isBrowserMinimized.value = false
+}
+
+const isBrowserVisible = computed(() => isBrowserOpen.value && !isBrowserMinimized.value)
+
+const browserButtonLabel = computed(() => {
+  if (isBrowserVisible.value) {
+    return 'Browser open'
+  }
+
+  if (isBrowserMinimized.value) {
+    return 'Restore browser'
+  }
+
+  return 'Open browser'
+})
+
+const homeBadge = computed(() => {
+  if (props.effectiveTheme === 'macos') {
+    return 'macOS desktop'
+  }
+
+  if (props.effectiveTheme === 'linux') {
+    return 'Linux desktop'
+  }
+
+  return 'Windows desktop'
+})
 </script>
 
 <template>
   <section class="desktop-shell">
-    <div class="hero-panel">
-      <div class="hero-copy">
-        <div class="hero-meta">
-          <p class="eyebrow">System OS Portfolio</p>
-          <span class="status-pill">{{ shellStatus }}</span>
+    <section class="desktop-canvas" :class="`theme-${effectiveTheme}`">
+      <div class="desktop-surface" :class="`theme-${effectiveTheme}`">
+        <div class="desktop-theme-controller">
+          <div class="desktop-theme-controller__meta">
+            <span class="status-pill">{{ homeBadge }}</span>
+            <span class="desktop-theme-controller__state">{{ shellStatus }}</span>
+          </div>
+
+          <div class="control-group">
+            <span class="control-label">Theme source</span>
+
+            <button
+              class="source-button"
+              :class="{ 'is-active': isSystemTheme }"
+              type="button"
+              @click="$emit('clearTheme')"
+            >
+              Follow detected OS
+            </button>
+          </div>
+
+          <div class="control-group">
+            <span class="control-label">Switch OS</span>
+
+            <div class="theme-switcher">
+              <button
+                v-for="theme in themes"
+                :key="theme"
+                class="theme-button"
+                :class="{ 'is-active': effectiveTheme === theme && !isSystemTheme }"
+                type="button"
+                @click="$emit('selectTheme', theme)"
+              >
+                {{ theme }}
+              </button>
+            </div>
+          </div>
         </div>
 
-        <div class="hero-stack">
-          <h1 class="hero-title">{{ content.title }}</h1>
-          <p class="hero-description">{{ content.desktopIntro }}</p>
-        </div>
-
-        <dl class="theme-facts">
-          <div class="fact-card">
-            <dt class="fact-label">Detected</dt>
-            <dd class="fact-value">{{ detectedTheme }}</dd>
-          </div>
-
-          <div class="fact-card">
-            <dt class="fact-label">Selected</dt>
-            <dd class="fact-value">{{ selectedTheme ?? 'system default' }}</dd>
-          </div>
-
-          <div class="fact-card">
-            <dt class="fact-label">Active</dt>
-            <dd class="fact-value">{{ effectiveTheme }}</dd>
-          </div>
-        </dl>
-
-        <dl class="metric-grid">
-          <div v-for="metric in content.metrics" :key="metric.label" class="metric-card">
-            <dt class="fact-label">{{ metric.label }}</dt>
-            <dd class="metric-value">{{ metric.value }}</dd>
-          </div>
-        </dl>
-      </div>
-
-      <div class="control-panel">
-        <div class="control-group">
-          <span class="control-label">Theme source</span>
-
-          <button
-            class="source-button"
-            :class="{ 'is-active': isSystemTheme }"
-            type="button"
-            @click="$emit('clearTheme')"
-          >
-            Follow detected OS
+        <div v-if="!isBrowserVisible" class="desktop-home-action">
+          <button class="desktop-primary-button" type="button" @click="openBrowser">
+            {{ browserButtonLabel }}
           </button>
         </div>
 
-        <div class="control-group">
-          <span class="control-label">Manual switch</span>
+        <DesktopFooter :theme="effectiveTheme" />
 
-          <div class="theme-switcher">
-            <button
-              v-for="theme in themes"
-              :key="theme"
-              class="theme-button"
-              :class="{ 'is-active': effectiveTheme === theme && !isSystemTheme }"
-              type="button"
-              @click="$emit('selectTheme', theme)"
-            >
-              {{ theme }}
-            </button>
-          </div>
-        </div>
-
-        <div class="preview-window">
-          <header class="preview-titlebar">
-            <div class="window-dots">
-              <span />
-              <span />
-              <span />
+        <AppWindow
+          v-if="isBrowserVisible"
+          :theme="effectiveTheme"
+          :is-focused="true"
+          :z-index="3"
+          fill
+          @focus="openBrowser"
+          @minimize="minimizeBrowser"
+          @close="closeBrowser"
+        >
+          <div class="browser-home">
+            <div class="browser-home__hero">
+              <p class="preview-kicker">Browser preview</p>
+              <strong class="preview-heading">{{ content.name }}</strong>
+              <p class="preview-text">{{ content.summary }}</p>
             </div>
 
-            <span class="preview-app-name">portfolio.chrome</span>
-          </header>
+            <div class="browser-home__grid">
+              <article class="browser-card">
+                <span class="fact-label">About</span>
+                <p class="preview-text">{{ content.summary }}</p>
+              </article>
 
-          <div class="preview-content">
-            <p class="preview-kicker">Desktop entry</p>
-            <strong class="preview-heading">{{ content.name }}</strong>
-            <p class="preview-text">{{ content.summary }}</p>
+              <article class="browser-card">
+                <span class="fact-label">Project</span>
+                <p class="preview-text">{{ content.projects[0]?.name }}</p>
+              </article>
 
-            <div class="preview-list">
-              <article
-                v-for="project in content.projects.slice(0, 2)"
-                :key="project.name"
-                class="preview-item"
-              >
-                <span class="preview-item-meta">{{ project.year }}</span>
-                <strong class="preview-item-title">{{ project.name }}</strong>
-                <p class="preview-item-text">{{ project.summary }}</p>
+              <article class="browser-card">
+                <span class="fact-label">Resume</span>
+                <p class="preview-text">{{ content.resume.label }}</p>
               </article>
             </div>
           </div>
-        </div>
+        </AppWindow>
       </div>
-    </div>
+    </section>
   </section>
 </template>
