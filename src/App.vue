@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
 
-import DesktopShellPreview from '@/components/DesktopShellPreview.vue'
-import MobileInstitutionalView from '@/components/MobileInstitutionalView.vue'
+import DesktopShellPreview from '@/components/Desktop/DesktopShellPreview.vue'
+import MobileInstitutionalView from '@/components/Mobile/MobileInstitutionalView.vue'
 import { useResponsiveMode } from '@/composables/useResponsiveMode'
 import { portfolioContent } from '@/content/portfolio'
 import { useThemeStore } from '@/stores/theme'

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import WindowControls from '@/components/WindowControls.vue'
+import WindowControls from '@/components/Desktop/WindowControls.vue'
 import type { OsTheme } from '@/types/theme'
 
 withDefaults(

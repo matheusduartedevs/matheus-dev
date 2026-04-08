@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 
-import AppWindow from '@/components/AppWindow.vue'
-import DesktopFooter from '@/components/DesktopFooter.vue'
+import AppWindow from '@/components/desktop/AppWindow.vue'
+import DesktopFooter from '@/components/desktop/DesktopFooter.vue'
 import type { PortfolioContent } from '@/types/portfolio'
 import type { OsTheme } from '@/types/theme'
 
