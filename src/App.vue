@@ -12,7 +12,7 @@ const themeStore = useThemeStore()
 const { isDesktop } = useResponsiveMode()
 
 const shellStatus = computed(() =>
-  themeStore.isSystemTheme ? 'Using detected OS theme' : 'Using manual override',
+  themeStore.isSystemTheme ? 'Usando o sistema detectado' : 'Usando seleção manual',
 )
 
 const setTheme = (theme: OsTheme) => {

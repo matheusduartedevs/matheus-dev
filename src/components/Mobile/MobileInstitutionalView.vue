@@ -9,7 +9,7 @@ defineProps<{
 <template>
   <section class="mobile-page">
     <header class="mobile-hero">
-      <p class="mobile-eyebrow">Mobile institutional view</p>
+      <p class="mobile-eyebrow">Versão institucional mobile</p>
       <h1 class="mobile-title">{{ content.name }}</h1>
       <p class="mobile-subtitle">{{ content.title }}</p>
       <p class="mobile-summary">{{ content.mobileIntro }}</p>
@@ -19,12 +19,12 @@ defineProps<{
     </header>
 
     <section class="mobile-section">
-      <h2 class="mobile-section-title">About</h2>
+      <h2 class="mobile-section-title">Sobre</h2>
       <p class="mobile-body">{{ content.summary }}</p>
     </section>
 
     <section class="mobile-section">
-      <h2 class="mobile-section-title">Selected projects</h2>
+      <h2 class="mobile-section-title">Projetos selecionados</h2>
 
       <div class="mobile-card-list">
         <article v-for="project in content.projects" :key="project.name" class="mobile-card">
@@ -39,7 +39,7 @@ defineProps<{
     </section>
 
     <section class="mobile-section">
-      <h2 class="mobile-section-title">Experience</h2>
+      <h2 class="mobile-section-title">Experiência</h2>
 
       <div class="mobile-card-list">
         <article
@@ -58,7 +58,7 @@ defineProps<{
     </section>
 
     <section class="mobile-section">
-      <h2 class="mobile-section-title">Contact</h2>
+      <h2 class="mobile-section-title">Contato</h2>
 
       <div class="mobile-contact-list">
         <a

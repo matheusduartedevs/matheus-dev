@@ -52,38 +52,38 @@ const isTerminalVisible = computed(() => activeOverlay.value === 'terminal')
 
 const browserButtonLabel = computed(() => {
   if (isBrowserVisible.value) {
-    return 'Browser open'
+    return 'Navegador aberto'
   }
 
   if (minimizedOverlay.value === 'browser') {
-    return 'Restore browser'
+    return 'Restaurar navegador'
   }
 
-  return 'Open browser'
+  return 'Abrir navegador'
 })
 
 const terminalButtonLabel = computed(() => {
   if (isTerminalVisible.value) {
-    return 'Terminal open'
+    return 'Terminal aberto'
   }
 
   if (minimizedOverlay.value === 'terminal') {
-    return 'Restore terminal'
+    return 'Restaurar terminal'
   }
 
-  return 'Open terminal'
+  return 'Abrir terminal'
 })
 
 const homeBadge = computed(() => {
   if (props.effectiveTheme === 'macos') {
-    return 'macOS desktop'
+    return 'Desktop macOS'
   }
 
   if (props.effectiveTheme === 'linux') {
-    return 'Linux desktop'
+    return 'Desktop Linux'
   }
 
-  return 'Windows desktop'
+  return 'Desktop Windows'
 })
 </script>
 
@@ -98,7 +98,7 @@ const homeBadge = computed(() => {
           </div>
 
           <div class="control-group">
-            <span class="control-label">Theme source</span>
+            <span class="control-label">Origem do tema</span>
 
             <button
               class="source-button"
@@ -106,12 +106,12 @@ const homeBadge = computed(() => {
               type="button"
               @click="$emit('clearTheme')"
             >
-              Follow detected OS
+              Seguir sistema detectado
             </button>
           </div>
 
           <div class="control-group">
-            <span class="control-label">Switch OS</span>
+            <span class="control-label">Trocar sistema</span>
 
             <div class="theme-switcher">
               <button
@@ -168,7 +168,7 @@ const homeBadge = computed(() => {
           @minimize="minimizeOverlay"
           @close="closeOverlay"
         >
-          <TerminalWindowContent :theme="effectiveTheme" />
+          <TerminalWindowContent :content="content" :theme="effectiveTheme" />
         </AppWindow>
       </div>
     </section>
