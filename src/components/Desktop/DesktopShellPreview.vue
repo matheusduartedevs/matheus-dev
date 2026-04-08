@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 
-import AppWindow from '@/components/desktop/AppWindow.vue'
-import DesktopFooter from '@/components/desktop/DesktopFooter.vue'
+import AppWindow from '@/components/Desktop/AppWindow.vue'
+import BrowserWindowContent from '@/components/Desktop/BrowserWindowContent.vue'
+import DesktopFooter from '@/components/Desktop/DesktopFooter.vue'
+import TerminalWindowContent from '@/components/Desktop/TerminalWindowContent.vue'
 import type { PortfolioContent } from '@/types/portfolio'
 import type { OsTheme } from '@/types/theme'
 
@@ -21,35 +23,55 @@ defineEmits<{
   clearTheme: []
 }>()
 
-const isBrowserOpen = ref(false)
-const isBrowserMinimized = ref(false)
+type DesktopOverlay = 'browser' | 'terminal' | null
 
-const openBrowser = () => {
-  isBrowserOpen.value = true
-  isBrowserMinimized.value = false
+const activeOverlay = ref<DesktopOverlay>(null)
+const minimizedOverlay = ref<Exclude<DesktopOverlay, null> | null>(null)
+
+const openOverlay = (overlay: Exclude<DesktopOverlay, null>) => {
+  activeOverlay.value = overlay
+  minimizedOverlay.value = null
 }
 
-const minimizeBrowser = () => {
-  isBrowserMinimized.value = true
+const minimizeOverlay = () => {
+  if (!activeOverlay.value) {
+    return
+  }
+
+  minimizedOverlay.value = activeOverlay.value
+  activeOverlay.value = null
 }
 
-const closeBrowser = () => {
-  isBrowserOpen.value = false
-  isBrowserMinimized.value = false
+const closeOverlay = () => {
+  activeOverlay.value = null
+  minimizedOverlay.value = null
 }
 
-const isBrowserVisible = computed(() => isBrowserOpen.value && !isBrowserMinimized.value)
+const isBrowserVisible = computed(() => activeOverlay.value === 'browser')
+const isTerminalVisible = computed(() => activeOverlay.value === 'terminal')
 
 const browserButtonLabel = computed(() => {
   if (isBrowserVisible.value) {
     return 'Browser open'
   }
 
-  if (isBrowserMinimized.value) {
+  if (minimizedOverlay.value === 'browser') {
     return 'Restore browser'
   }
 
   return 'Open browser'
+})
+
+const terminalButtonLabel = computed(() => {
+  if (isTerminalVisible.value) {
+    return 'Terminal open'
+  }
+
+  if (minimizedOverlay.value === 'terminal') {
+    return 'Restore terminal'
+  }
+
+  return 'Open terminal'
 })
 
 const homeBadge = computed(() => {
@@ -106,10 +128,19 @@ const homeBadge = computed(() => {
           </div>
         </div>
 
-        <div v-if="!isBrowserVisible" class="desktop-home-action">
-          <button class="desktop-primary-button" type="button" @click="openBrowser">
-            {{ browserButtonLabel }}
-          </button>
+        <div v-if="!activeOverlay" class="desktop-home-action">
+          <div class="desktop-home-action__buttons">
+            <button class="desktop-primary-button" type="button" @click="openOverlay('browser')">
+              {{ browserButtonLabel }}
+            </button>
+            <button
+              class="desktop-primary-button desktop-primary-button--terminal"
+              type="button"
+              @click="openOverlay('terminal')"
+            >
+              {{ terminalButtonLabel }}
+            </button>
+          </div>
         </div>
 
         <DesktopFooter :theme="effectiveTheme" />
@@ -120,34 +151,24 @@ const homeBadge = computed(() => {
           :is-focused="true"
           :z-index="3"
           fill
-          @focus="openBrowser"
-          @minimize="minimizeBrowser"
-          @close="closeBrowser"
+          @focus="openOverlay('browser')"
+          @minimize="minimizeOverlay"
+          @close="closeOverlay"
         >
-          <div class="browser-home">
-            <div class="browser-home__hero">
-              <p class="preview-kicker">Browser preview</p>
-              <strong class="preview-heading">{{ content.name }}</strong>
-              <p class="preview-text">{{ content.summary }}</p>
-            </div>
+          <BrowserWindowContent :content="content" />
+        </AppWindow>
 
-            <div class="browser-home__grid">
-              <article class="browser-card">
-                <span class="fact-label">About</span>
-                <p class="preview-text">{{ content.summary }}</p>
-              </article>
-
-              <article class="browser-card">
-                <span class="fact-label">Project</span>
-                <p class="preview-text">{{ content.projects[0]?.name }}</p>
-              </article>
-
-              <article class="browser-card">
-                <span class="fact-label">Resume</span>
-                <p class="preview-text">{{ content.resume.label }}</p>
-              </article>
-            </div>
-          </div>
+        <AppWindow
+          v-if="isTerminalVisible"
+          :theme="effectiveTheme"
+          :is-focused="true"
+          :z-index="3"
+          fill
+          @focus="openOverlay('terminal')"
+          @minimize="minimizeOverlay"
+          @close="closeOverlay"
+        >
+          <TerminalWindowContent :theme="effectiveTheme" />
         </AppWindow>
       </div>
     </section>
