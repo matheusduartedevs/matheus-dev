@@ -231,6 +231,13 @@ a {
   width: min(24rem, 100%);
 }
 
+.desktop-restore-chip {
+  position: absolute;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 2;
+}
+
 .desktop-primary-button {
   min-height: 3.5rem;
   padding: 0.95rem 1.35rem;
@@ -389,6 +396,13 @@ a {
 .desktop-window__titlebar.theme-windows,
 .desktop-window__titlebar.theme-linux {
   padding-right: 0;
+}
+
+.desktop-window__title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .window-controls {
@@ -561,10 +575,51 @@ a {
   gap: 0.8rem;
 }
 
+.browser-home__title {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  line-height: 1.5;
+}
+
+.browser-home__metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.browser-stat {
+  display: grid;
+  gap: 0.6rem;
+  padding: 1rem;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 1.1rem;
+  background: color-mix(in srgb, var(--color-surface) 86%, transparent);
+}
+
+.browser-section {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.browser-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .browser-home__grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
+}
+
+.browser-home__timeline,
+.browser-home__contacts {
+  display: grid;
+  gap: 1rem;
+}
+
+.browser-home__contacts {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .browser-card {
@@ -574,6 +629,19 @@ a {
   border: 1px solid var(--color-border-subtle);
   border-radius: 1.1rem;
   background: color-mix(in srgb, var(--color-surface-alt) 90%, transparent);
+}
+
+.browser-contact {
+  display: grid;
+  gap: 0.55rem;
+  padding: 1rem;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 1.1rem;
+  background: color-mix(in srgb, var(--color-surface-alt) 90%, transparent);
+}
+
+.browser-contact--resume {
+  background: color-mix(in srgb, var(--color-accent) 15%, var(--color-surface-alt));
 }
 
 .file-window {
@@ -690,6 +758,23 @@ a {
 .file-window__meta {
   color: var(--color-text-muted);
   font-size: 0.85rem;
+}
+
+.file-window__actions {
+  display: inline-flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.file-window__actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.25rem;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-surface) 86%, transparent);
 }
 
 .terminal-window {
@@ -963,10 +1048,16 @@ a {
 }
 
 @media (max-width: 960px) {
+  .app-shell {
+    padding: 1rem;
+  }
+
   .desktop-theme-controller {
     width: calc(100% - 2rem);
   }
 
+  .browser-home__metrics,
+  .browser-home__contacts,
   .browser-home__grid {
     grid-template-columns: 1fr;
   }

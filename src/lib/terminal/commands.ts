@@ -19,27 +19,27 @@ const joinInline = (items: string[]) => items.filter(Boolean).join(' · ')
 
 const createCommandList = (): TerminalCommandDefinition[] => [
   {
-    name: 'ajuda',
-    aliases: ['help'],
+    name: 'help',
+    aliases: ['ajuda'],
     description: 'Lista os comandos disponíveis no terminal.',
     execute: ({ commands }) =>
       print(
         [
           'Comandos disponíveis:',
-          ...commands.map((command) => `${command.name} — ${command.description}`),
+          ...commands.map((command) => `${command.name} - ${command.description}`),
         ],
         'system',
       ),
   },
   {
-    name: 'sobre-mim',
-    aliases: ['about'],
+    name: 'about',
+    aliases: ['sobre-mim'],
     description: 'Mostra um resumo profissional.',
     execute: ({ content }) => print([content.name, content.title, content.summary]),
   },
   {
-    name: 'projetos',
-    aliases: ['projects'],
+    name: 'projects',
+    aliases: ['projetos'],
     description: 'Lista os projetos selecionados.',
     execute: ({ content }) =>
       print(
@@ -54,14 +54,14 @@ const createCommandList = (): TerminalCommandDefinition[] => [
       ),
   },
   {
-    name: 'experiencias',
-    aliases: ['experience'],
+    name: 'experience',
+    aliases: ['experiencias'],
     description: 'Mostra as experiências profissionais.',
     execute: ({ content }) =>
       print(
         content.experience
           .flatMap((entry) => [
-            `${entry.role} — ${entry.company}`,
+            `${entry.role} - ${entry.company}`,
             `${entry.period}`,
             `${entry.summary}`,
             `Destaques: ${joinInline(entry.highlights.slice(0, 3))}`,
@@ -71,28 +71,28 @@ const createCommandList = (): TerminalCommandDefinition[] => [
       ),
   },
   {
-    name: 'habilidades',
-    aliases: ['skills'],
+    name: 'skills',
+    aliases: ['habilidades'],
     description: 'Mostra as principais habilidades técnicas.',
     execute: ({ content }) =>
       print(['Habilidades:', ...content.skills.map((skill) => `- ${skill.value}`)]),
   },
   {
-    name: 'contato',
-    aliases: ['contacts'],
+    name: 'contact',
+    aliases: ['contacts', 'contato'],
     description: 'Mostra os canais de contato.',
     execute: ({ content }) =>
       print(content.contacts.map((contact) => `${contact.label}: ${contact.value}`)),
   },
   {
-    name: 'curriculo',
-    aliases: ['resume'],
+    name: 'resume',
+    aliases: ['curriculo'],
     description: 'Mostra o caminho do currículo.',
     execute: ({ content }) => print([content.resume.label, content.resume.href], 'system'),
   },
   {
-    name: 'limpar',
-    aliases: ['clear'],
+    name: 'clear',
+    aliases: ['limpar'],
     description: 'Limpa o histórico de saída do terminal.',
     execute: () => ({ type: 'clear' }),
   },
@@ -123,7 +123,7 @@ export const executeTerminalCommand = (
     return print(
       [
         `Comando não encontrado: ${rawInput.trim()}`,
-        'Digite "ajuda" para ver os comandos disponíveis.',
+        'Digite "help" para ver os comandos disponíveis.',
       ],
       'error',
     )

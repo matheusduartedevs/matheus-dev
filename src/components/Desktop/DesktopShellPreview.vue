@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
+import { storeToRefs } from 'pinia'
 
 import AppWindow from '@/components/Desktop/AppWindow.vue'
 import BrowserWindowContent from '@/components/Desktop/BrowserWindowContent.vue'
 import DesktopFooter from '@/components/Desktop/DesktopFooter.vue'
 import FileWindowContent from '@/components/Desktop/FileWindowContent.vue'
 import TerminalWindowContent from '@/components/Desktop/TerminalWindowContent.vue'
+import { useDesktopStore } from '@/stores/desktop'
+import type { DesktopAppId } from '@/types/desktop'
 import type { PortfolioContent } from '@/types/portfolio'
 import type { OsTheme } from '@/types/theme'
 
@@ -24,40 +27,33 @@ defineEmits<{
   clearTheme: []
 }>()
 
-type DesktopOverlay = 'browser' | 'terminal' | 'files' | null
+const desktopStore = useDesktopStore()
+const { apps, windows, visibleWindows } = storeToRefs(desktopStore)
 
-const activeOverlay = ref<DesktopOverlay>(null)
-const minimizedOverlay = ref<Exclude<DesktopOverlay, null> | null>(null)
+const findWindow = (appId: DesktopAppId) => windows.value.find((window) => window.appId === appId) ?? null
 
-const openOverlay = (overlay: Exclude<DesktopOverlay, null>) => {
-  activeOverlay.value = overlay
-  minimizedOverlay.value = null
-}
+const browserWindow = computed(() => findWindow('browser'))
+const terminalWindow = computed(() => findWindow('terminal'))
+const filesWindow = computed(() => findWindow('files'))
 
-const minimizeOverlay = () => {
-  if (!activeOverlay.value) {
-    return
-  }
+const isWindowVisible = (appId: DesktopAppId) =>
+  computed(() => visibleWindows.value.some((window) => window.appId === appId))
 
-  minimizedOverlay.value = activeOverlay.value
-  activeOverlay.value = null
-}
+const browserWindowVisible = isWindowVisible('browser')
+const terminalWindowVisible = isWindowVisible('terminal')
+const filesWindowVisible = isWindowVisible('files')
 
-const closeOverlay = () => {
-  activeOverlay.value = null
-  minimizedOverlay.value = null
-}
-
-const isBrowserVisible = computed(() => activeOverlay.value === 'browser')
-const isTerminalVisible = computed(() => activeOverlay.value === 'terminal')
-const isFilesVisible = computed(() => activeOverlay.value === 'files')
+const lastMinimizedWindow = computed(() => {
+  const minimizedWindows = windows.value.filter((window) => window.isMinimized)
+  return minimizedWindows.sort((left, right) => right.zIndex - left.zIndex)[0] ?? null
+})
 
 const browserButtonLabel = computed(() => {
-  if (isBrowserVisible.value) {
+  if (browserWindowVisible.value) {
     return 'Navegador aberto'
   }
 
-  if (minimizedOverlay.value === 'browser') {
+  if (browserWindow.value?.isMinimized) {
     return 'Restaurar navegador'
   }
 
@@ -65,11 +61,11 @@ const browserButtonLabel = computed(() => {
 })
 
 const terminalButtonLabel = computed(() => {
-  if (isTerminalVisible.value) {
+  if (terminalWindowVisible.value) {
     return 'Terminal aberto'
   }
 
-  if (minimizedOverlay.value === 'terminal') {
+  if (terminalWindow.value?.isMinimized) {
     return 'Restaurar terminal'
   }
 
@@ -77,11 +73,11 @@ const terminalButtonLabel = computed(() => {
 })
 
 const filesButtonLabel = computed(() => {
-  if (isFilesVisible.value) {
+  if (filesWindowVisible.value) {
     return 'Arquivos abertos'
   }
 
-  if (minimizedOverlay.value === 'files') {
+  if (filesWindow.value?.isMinimized) {
     return 'Restaurar arquivos'
   }
 
@@ -142,22 +138,26 @@ const homeBadge = computed(() => {
           </div>
         </div>
 
-        <div v-if="!activeOverlay" class="desktop-home-action">
+        <div v-if="!visibleWindows.length" class="desktop-home-action">
           <div class="desktop-home-action__buttons">
-            <button class="desktop-primary-button" type="button" @click="openOverlay('browser')">
+            <button
+              class="desktop-primary-button"
+              type="button"
+              @click="desktopStore.openWindow('browser')"
+            >
               {{ browserButtonLabel }}
             </button>
             <button
               class="desktop-primary-button desktop-primary-button--terminal"
               type="button"
-              @click="openOverlay('terminal')"
+              @click="desktopStore.openWindow('terminal')"
             >
               {{ terminalButtonLabel }}
             </button>
             <button
               class="desktop-primary-button desktop-primary-button--files"
               type="button"
-              @click="openOverlay('files')"
+              @click="desktopStore.openWindow('files')"
             >
               {{ filesButtonLabel }}
             </button>
@@ -167,46 +167,58 @@ const homeBadge = computed(() => {
         <DesktopFooter :theme="effectiveTheme" />
 
         <AppWindow
-          v-if="isBrowserVisible"
+          v-if="browserWindowVisible && browserWindow"
+          :title="browserWindow.title"
           :theme="effectiveTheme"
-          :is-focused="true"
-          :z-index="3"
+          :is-focused="browserWindow.isFocused"
+          :z-index="browserWindow.zIndex"
           fill
-          @focus="openOverlay('browser')"
-          @minimize="minimizeOverlay"
-          @close="closeOverlay"
+          @focus="desktopStore.focusWindow('browser')"
+          @minimize="desktopStore.minimizeWindow('browser')"
+          @close="desktopStore.closeWindow('browser')"
         >
           <BrowserWindowContent :content="content" />
         </AppWindow>
 
         <AppWindow
-          v-if="isTerminalVisible"
+          v-if="terminalWindowVisible && terminalWindow"
+          :title="terminalWindow.title"
           :theme="effectiveTheme"
-          :is-focused="true"
-          :z-index="3"
+          :is-focused="terminalWindow.isFocused"
+          :z-index="terminalWindow.zIndex"
           fill
-          @focus="openOverlay('terminal')"
-          @minimize="minimizeOverlay"
-          @close="closeOverlay"
+          @focus="desktopStore.focusWindow('terminal')"
+          @minimize="desktopStore.minimizeWindow('terminal')"
+          @close="desktopStore.closeWindow('terminal')"
         >
           <TerminalWindowContent :content="content" :theme="effectiveTheme" />
         </AppWindow>
 
         <AppWindow
-          v-if="isFilesVisible"
+          v-if="filesWindowVisible && filesWindow"
+          :title="filesWindow.title"
           :theme="effectiveTheme"
-          :is-focused="true"
-          :z-index="3"
-          :x="180"
-          :y="100"
-          :width="680"
-          :height="440"
-          @focus="openOverlay('files')"
-          @minimize="minimizeOverlay"
-          @close="closeOverlay"
+          :is-focused="filesWindow.isFocused"
+          :z-index="filesWindow.zIndex"
+          :x="filesWindow.x"
+          :y="filesWindow.y"
+          :width="filesWindow.width"
+          :height="filesWindow.height"
+          @focus="desktopStore.focusWindow('files')"
+          @minimize="desktopStore.minimizeWindow('files')"
+          @close="desktopStore.closeWindow('files')"
         >
           <FileWindowContent :content="content" :theme="effectiveTheme" />
         </AppWindow>
+
+        <button
+          v-if="lastMinimizedWindow"
+          class="desktop-restore-chip"
+          type="button"
+          @click="desktopStore.openWindow(lastMinimizedWindow.appId)"
+        >
+          Restaurar {{ lastMinimizedWindow.title }}
+        </button>
       </div>
     </section>
   </section>

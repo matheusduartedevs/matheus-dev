@@ -4,6 +4,7 @@ import type { OsTheme } from '@/types/theme'
 
 withDefaults(
   defineProps<{
+    title: string
     theme: OsTheme
     isFocused: boolean
     x?: number
@@ -43,6 +44,7 @@ defineEmits<{
     @pointerdown="$emit('focus')"
   >
     <header class="desktop-window__titlebar" :class="`theme-${theme}`">
+      <span class="desktop-window__title">{{ title }}</span>
       <WindowControls
         :theme="theme"
         @minimize="$emit('minimize')"

@@ -30,23 +30,20 @@ defineProps<{
         <div class="file-window__header-row">
           <span>Nome</span>
           <span>Tipo</span>
-          <span>Tamanho</span>
+          <span>Ação</span>
         </div>
 
-        <a
-          class="file-window__row"
-          :class="`file-window__row--${theme}`"
-          :href="content.resume.href"
-          target="_blank"
-          rel="noreferrer"
-        >
+        <div class="file-window__row" :class="`file-window__row--${theme}`">
           <div class="file-window__file">
             <span class="file-window__file-badge">PDF</span>
             <span class="file-window__file-name">{{ content.resume.label }}</span>
           </div>
           <span class="file-window__meta">Documento PDF</span>
-          <span class="file-window__meta">1 arquivo</span>
-        </a>
+          <div class="file-window__actions">
+            <a :href="content.resume.href" target="_blank" rel="noreferrer">Open</a>
+            <a :href="content.resume.href" download>Download</a>
+          </div>
+        </div>
       </section>
     </div>
   </div>

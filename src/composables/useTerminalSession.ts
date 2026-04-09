@@ -14,7 +14,7 @@ const createInitialEntries = (): TerminalEntry[] => [
   {
     id: createEntryId(),
     tone: 'system',
-    lines: ['Terminal pronto. Digite "ajuda" para ver os comandos disponíveis.'],
+    lines: ['Terminal pronto. Digite "help" para ver os comandos disponíveis.'],
   },
 ]
 
@@ -48,7 +48,7 @@ export const useTerminalSession = (content: PortfolioContent) => {
     }
 
     if (!hintedCommand.value) {
-      return 'Nenhum comando correspondente. Digite "ajuda" para ver os comandos.'
+      return 'Nenhum comando correspondente. Digite "help" para ver os comandos.'
     }
 
     if (trimmedInput.value.toLowerCase() === hintedCommand.value.name) {
