@@ -4,6 +4,7 @@ import { computed, ref } from 'vue'
 import AppWindow from '@/components/Desktop/AppWindow.vue'
 import BrowserWindowContent from '@/components/Desktop/BrowserWindowContent.vue'
 import DesktopFooter from '@/components/Desktop/DesktopFooter.vue'
+import FileWindowContent from '@/components/Desktop/FileWindowContent.vue'
 import TerminalWindowContent from '@/components/Desktop/TerminalWindowContent.vue'
 import type { PortfolioContent } from '@/types/portfolio'
 import type { OsTheme } from '@/types/theme'
@@ -23,7 +24,7 @@ defineEmits<{
   clearTheme: []
 }>()
 
-type DesktopOverlay = 'browser' | 'terminal' | null
+type DesktopOverlay = 'browser' | 'terminal' | 'files' | null
 
 const activeOverlay = ref<DesktopOverlay>(null)
 const minimizedOverlay = ref<Exclude<DesktopOverlay, null> | null>(null)
@@ -49,6 +50,7 @@ const closeOverlay = () => {
 
 const isBrowserVisible = computed(() => activeOverlay.value === 'browser')
 const isTerminalVisible = computed(() => activeOverlay.value === 'terminal')
+const isFilesVisible = computed(() => activeOverlay.value === 'files')
 
 const browserButtonLabel = computed(() => {
   if (isBrowserVisible.value) {
@@ -72,6 +74,18 @@ const terminalButtonLabel = computed(() => {
   }
 
   return 'Abrir terminal'
+})
+
+const filesButtonLabel = computed(() => {
+  if (isFilesVisible.value) {
+    return 'Arquivos abertos'
+  }
+
+  if (minimizedOverlay.value === 'files') {
+    return 'Restaurar arquivos'
+  }
+
+  return 'Abrir arquivos'
 })
 
 const homeBadge = computed(() => {
@@ -140,6 +154,13 @@ const homeBadge = computed(() => {
             >
               {{ terminalButtonLabel }}
             </button>
+            <button
+              class="desktop-primary-button desktop-primary-button--files"
+              type="button"
+              @click="openOverlay('files')"
+            >
+              {{ filesButtonLabel }}
+            </button>
           </div>
         </div>
 
@@ -169,6 +190,22 @@ const homeBadge = computed(() => {
           @close="closeOverlay"
         >
           <TerminalWindowContent :content="content" :theme="effectiveTheme" />
+        </AppWindow>
+
+        <AppWindow
+          v-if="isFilesVisible"
+          :theme="effectiveTheme"
+          :is-focused="true"
+          :z-index="3"
+          :x="180"
+          :y="100"
+          :width="680"
+          :height="440"
+          @focus="openOverlay('files')"
+          @minimize="minimizeOverlay"
+          @close="closeOverlay"
+        >
+          <FileWindowContent :content="content" :theme="effectiveTheme" />
         </AppWindow>
       </div>
     </section>
