@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nextTick, ref, watch } from 'vue'
+import { nextTick, onMounted, ref, watch } from 'vue'
 
 import { useTerminalSession } from '@/composables/useTerminalSession'
 import type { PortfolioContent } from '@/types/portfolio'
@@ -11,17 +11,44 @@ const props = defineProps<{
 }>()
 
 const outputElement = ref<HTMLElement | null>(null)
+const inputElement = ref<HTMLInputElement | null>(null)
 
 const {
   commandInput,
   commandHint,
   entries,
   hintedCommand,
+  hintedCommands,
+  isLoading,
   submitCommand,
   moveHistoryUp,
   moveHistoryDown,
   applyHint,
 } = useTerminalSession(props.content)
+
+const bannerBlocks = [
+  {
+    tone: 'primary',
+    lines: [
+      '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',
+      '~ __  __    _  _____ _   _ _____ _   _ ____  ~',
+      '~|  \\/  |  / \\|_   _| | | | ____| | | / ___| ~',
+      '~| |\\/| | / _ \\ | | | |_| |  _| | | | \\___ \\ ~',
+      '~| |  | |/ ___ \\| | |  _  | |___| |_| |___) |~',
+      '~|_|__|_/_/ _ \\_\\_| |_|_|_|_____|\\___/|____/ ~',
+      '~|  _ \\| | | | / \\  |  _ \\_   _| ____|       ~',
+      '~| | | | | | |/ _ \\ | |_) || | |  _|         ~',
+      '~| |_| | |_| / ___ \\|  _ < | | | |___        ~',
+      '~|____/ \\___/_/   \\_\\_| \\_\\|_| |_____|       ~',
+      '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',
+    ],
+  },
+] as const
+
+const capabilityRows = props.content.metrics.map((metric) => ({
+  label: metric.label,
+  value: metric.value,
+}))
 
 const promptValue =
   props.theme === 'windows'
@@ -41,6 +68,23 @@ watch(
   },
   { deep: true },
 )
+
+const focusInput = () => {
+  inputElement.value?.focus()
+}
+
+onMounted(() => {
+  focusInput()
+})
+
+watch(isLoading, async (loading) => {
+  if (loading) {
+    return
+  }
+
+  await nextTick()
+  focusInput()
+})
 
 const onInputKeydown = (event: KeyboardEvent) => {
   if (event.key === 'Enter') {
@@ -69,22 +113,53 @@ const onInputKeydown = (event: KeyboardEvent) => {
 </script>
 
 <template>
-  <div class="terminal-window" :class="`terminal-window--${theme}`">
-    <div class="terminal-window__surface" :class="`terminal-window__surface--${theme}`">
-      <div class="terminal-window__intro" :class="`terminal-window__intro--${theme}`">
-        <p class="terminal-window__eyebrow">Terminal</p>
-        <h2 class="terminal-window__title">Portfólio interativo</h2>
-        <p class="terminal-window__description">
-          Digite um comando para navegar pelo terminal.
-        </p>
-      </div>
+  <div class="terminal-window" :class="`terminal-window--${theme}`" @pointerdown="focusInput">
+    <div ref="outputElement" class="terminal-window__output" :class="`terminal-window__output--${theme}`">
+      <section class="terminal-window__hero">
+        <div class="terminal-window__banner" aria-hidden="true">
+          <div
+            v-for="block in bannerBlocks"
+            :key="block.tone"
+            class="terminal-window__banner-block"
+            :class="`terminal-window__banner-block--${block.tone}`"
+          >
+            <p v-for="line in block.lines" :key="line" class="terminal-window__banner-line">
+              {{ line }}
+            </p>
+          </div>
+        </div>
 
-      <div ref="outputElement" class="terminal-window__output" :class="`terminal-window__output--${theme}`">
+        <div class="terminal-window__hero-grid">
+          <article class="terminal-window__panel">
+            <p class="terminal-window__panel-text">{{ content.title }}</p>
+            <p class="terminal-window__panel-meta">{{ content.summary }}</p>
+          </article>
+
+          <article class="terminal-window__panel">
+            <span class="terminal-window__panel-label">Capacidades</span>
+            <div class="terminal-window__capabilities">
+              <div
+                v-for="row in capabilityRows"
+                :key="row.label"
+                class="terminal-window__capability-row"
+              >
+                <span class="terminal-window__capability-label">{{ row.label }}</span>
+                <strong class="terminal-window__capability-value">{{ row.value }}</strong>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <div class="terminal-window__log">
         <div
           v-for="entry in entries"
           :key="entry.id"
           class="terminal-window__entry"
-          :class="`terminal-window__entry--${entry.tone}`"
+          :class="[
+            `terminal-window__entry--${entry.tone}`,
+            { 'is-animated': entry.isAnimated, 'is-loading': entry.tone === 'loading' },
+          ]"
         >
           <p
             v-for="(line, lineIndex) in entry.lines"
@@ -102,27 +177,44 @@ const onInputKeydown = (event: KeyboardEvent) => {
           </p>
         </div>
       </div>
-
-      <label class="terminal-window__input-row" :class="`terminal-window__input-row--${theme}`">
-        <span class="terminal-window__prompt" :class="`terminal-window__prompt--${theme}`">
-          {{ promptValue }}
-        </span>
-        <input
-          v-model="commandInput"
-          class="terminal-window__input"
-          :class="`terminal-window__input--${theme}`"
-          type="text"
-          placeholder="Digite um comando"
-          spellcheck="false"
-          @keydown="onInputKeydown"
-        />
-        <span
-          class="terminal-window__input-hint"
-          :class="{ 'is-actionable': Boolean(hintedCommand) }"
-        >
-          {{ commandHint }}
-        </span>
-      </label>
     </div>
+
+    <div v-if="hintedCommands.length" class="terminal-window__suggestions">
+      <button
+        v-for="command in hintedCommands"
+        :key="command.name"
+        class="terminal-window__suggestion"
+        type="button"
+        @mousedown.prevent
+        @click="commandInput = command.name"
+      >
+        <span class="terminal-window__suggestion-command">/{{ command.usage ?? command.name }}</span>
+        <span class="terminal-window__suggestion-description">{{ command.description }}</span>
+      </button>
+    </div>
+
+    <label class="terminal-window__input-row" :class="`terminal-window__input-row--${theme}`">
+      <span class="terminal-window__input-marker">&gt;</span>
+      <span class="terminal-window__prompt" :class="`terminal-window__prompt--${theme}`">
+        {{ promptValue }}
+      </span>
+      <input
+        ref="inputElement"
+        v-model="commandInput"
+        class="terminal-window__input"
+        :class="`terminal-window__input--${theme}`"
+        type="text"
+        placeholder='Digite um comando... tente "/help"'
+        spellcheck="false"
+        :disabled="isLoading"
+        @keydown="onInputKeydown"
+      />
+      <span
+        class="terminal-window__input-hint"
+        :class="{ 'is-actionable': Boolean(hintedCommand) }"
+      >
+        {{ commandHint }}
+      </span>
+    </label>
   </div>
 </template>

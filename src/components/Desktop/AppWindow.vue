@@ -9,6 +9,7 @@ withDefaults(
     theme: OsTheme
     isFocused: boolean
     windowMode: DesktopWindowMode
+    bodyClass?: string
     x?: number
     y?: number
     width?: number
@@ -54,7 +55,7 @@ defineEmits<{
       />
     </header>
 
-    <div class="desktop-window__body">
+    <div class="desktop-window__body" :class="bodyClass">
       <slot />
     </div>
   </article>

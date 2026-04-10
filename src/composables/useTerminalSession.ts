@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 
 import {
   executeTerminalCommand,
@@ -8,6 +8,12 @@ import {
 import type { PortfolioContent } from '@/types/portfolio'
 import type { TerminalCommandDefinition, TerminalEntry } from '@/types/terminal'
 
+const loadingMessage = 'Consultando portfólio'
+
+const loadingFrameCount = 4
+const responseDelayMs = 720
+const loadingFrameDelayMs = 150
+
 const createEntryId = () => `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
 
 const createInitialEntries = (): TerminalEntry[] => [
@@ -15,6 +21,19 @@ const createInitialEntries = (): TerminalEntry[] => [
     id: createEntryId(),
     tone: 'system',
     lines: ['Terminal pronto. Digite "help" para ver os comandos disponíveis.'],
+  },
+  {
+    id: createEntryId(),
+    tone: 'system',
+    lines: [
+      'Navegação rápida:',
+      '/whoami',
+      '/projects',
+      '/experience',
+      '/skills',
+      '/education',
+      '/contact',
+    ],
   },
 ]
 
@@ -24,8 +43,14 @@ export const useTerminalSession = (content: PortfolioContent) => {
   const commandInput = ref('')
   const commandHistory = ref<string[]>([])
   const historyIndex = ref(commandHistory.value.length)
+  const isLoading = ref(false)
+  let loadingInterval: number | null = null
+  let loadingTimeout: number | null = null
+  let resolveLoadingTimeout: (() => void) | null = null
+  let isDisposed = false
 
   const trimmedInput = computed(() => commandInput.value.trim())
+  const normalizedQuery = computed(() => trimmedInput.value.toLowerCase().replace(/^\//, ''))
 
   const hintedCommand = computed(() => {
     if (!trimmedInput.value) {
@@ -39,12 +64,48 @@ export const useTerminalSession = (content: PortfolioContent) => {
       return exactMatch
     }
 
-    return commands.find((command) => command.name.startsWith(normalizedInput)) ?? null
+    return (
+      commands.find((command) => {
+        const aliases = command.aliases ?? []
+
+        return (
+          command.name.startsWith(normalizedQuery.value) ||
+          (command.usage ?? command.name).startsWith(normalizedQuery.value) ||
+          aliases.some((alias) => alias.replace(/^\//, '').startsWith(normalizedQuery.value))
+        )
+      }) ?? null
+    )
+  })
+
+  const hintedCommands = computed(() => {
+    if (!trimmedInput.value || isLoading.value) {
+      return []
+    }
+
+    return commands
+      .filter((command) => {
+        const aliases = command.aliases ?? []
+
+        return (
+          command.name.startsWith(normalizedQuery.value) ||
+          (command.usage ?? command.name).startsWith(normalizedQuery.value) ||
+          aliases.some((alias) => alias.replace(/^\//, '').startsWith(normalizedQuery.value))
+        )
+      })
+      .slice(0, 5)
   })
 
   const commandHint = computed(() => {
+    if (isLoading.value) {
+      return ''
+    }
+
     if (!trimmedInput.value) {
-      return 'Pressione Tab para autocomplete. Use ↑ e ↓ para o histórico.'
+      return 'Pressione ↑ e ↓ para o histórico.'
+    }
+
+    if (hintedCommands.value.length) {
+      return 'Pressione Tab para completar.'
     }
 
     if (!hintedCommand.value) {
@@ -59,14 +120,69 @@ export const useTerminalSession = (content: PortfolioContent) => {
   })
 
   const appendEntry = (tone: TerminalEntry['tone'], lines: string[]) => {
-    entries.value.push({
+    const entry: TerminalEntry = {
       id: createEntryId(),
       tone,
       lines,
-    })
+    }
+
+    if (tone === 'output' || tone === 'error' || tone === 'system') {
+      entry.isAnimated = true
+    }
+
+    entries.value.push(entry)
+    return entry.id
   }
 
-  const submitCommand = () => {
+  const updateEntry = (entryId: string, lines: string[]) => {
+    const entry = entries.value.find((item) => item.id === entryId)
+
+    if (!entry) {
+      return
+    }
+
+    entry.lines = lines
+  }
+
+  const removeEntry = (entryId: string) => {
+    entries.value = entries.value.filter((entry) => entry.id !== entryId)
+  }
+
+  const stopLoadingAnimation = () => {
+    if (loadingInterval !== null) {
+      window.clearInterval(loadingInterval)
+      loadingInterval = null
+    }
+  }
+
+  const stopLoadingTimeout = () => {
+    if (loadingTimeout !== null) {
+      window.clearTimeout(loadingTimeout)
+      loadingTimeout = null
+    }
+
+    if (resolveLoadingTimeout) {
+      resolveLoadingTimeout()
+      resolveLoadingTimeout = null
+    }
+  }
+
+  const startLoadingAnimation = (entryId: string) => {
+    let frame = 0
+
+    updateEntry(entryId, [`${loadingMessage}${'.'.repeat(frame)}`])
+
+    loadingInterval = window.setInterval(() => {
+      frame = (frame + 1) % loadingFrameCount
+      updateEntry(entryId, [`${loadingMessage}${'.'.repeat(frame)}`])
+    }, loadingFrameDelayMs)
+  }
+
+  const submitCommand = async () => {
+    if (isLoading.value) {
+      return
+    }
+
     const normalizedInput = trimmedInput.value
 
     if (!normalizedInput) {
@@ -79,6 +195,26 @@ export const useTerminalSession = (content: PortfolioContent) => {
     historyIndex.value = commandHistory.value.length
 
     const result = executeTerminalCommand(commands, content, normalizedInput)
+    const loadingEntryId = appendEntry('loading', [loadingMessage])
+    isLoading.value = true
+    startLoadingAnimation(loadingEntryId)
+    commandInput.value = ''
+
+    await new Promise<void>((resolve) => {
+      resolveLoadingTimeout = resolve
+      loadingTimeout = window.setTimeout(() => {
+        loadingTimeout = null
+        resolveLoadingTimeout = null
+        resolve()
+      }, responseDelayMs)
+    })
+
+    if (isDisposed) {
+      return
+    }
+
+    stopLoadingAnimation()
+    removeEntry(loadingEntryId)
 
     if (result.type === 'clear') {
       entries.value = createInitialEntries()
@@ -86,8 +222,14 @@ export const useTerminalSession = (content: PortfolioContent) => {
       appendEntry(result.tone ?? 'output', result.lines)
     }
 
-    commandInput.value = ''
+    isLoading.value = false
   }
+
+  onBeforeUnmount(() => {
+    isDisposed = true
+    stopLoadingAnimation()
+    stopLoadingTimeout()
+  })
 
   const applyHistoryValue = (nextIndex: number) => {
     if (!commandHistory.value.length) {
@@ -137,10 +279,13 @@ export const useTerminalSession = (content: PortfolioContent) => {
   }
 
   return {
+    commands,
     commandInput,
     commandHint,
     entries,
     hintedCommand,
+    hintedCommands,
+    isLoading,
     submitCommand,
     moveHistoryUp,
     moveHistoryDown,

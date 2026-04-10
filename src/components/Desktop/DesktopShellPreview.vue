@@ -44,11 +44,6 @@ const browserWindowVisible = isWindowVisible('browser')
 const terminalWindowVisible = isWindowVisible('terminal')
 const filesWindowVisible = isWindowVisible('files')
 
-const lastMinimizedWindow = computed(() => {
-  const minimizedWindows = windows.value.filter((window) => window.isMinimized)
-  return minimizedWindows.sort((left, right) => right.zIndex - left.zIndex)[0] ?? null
-})
-
 const desktopShortcuts = computed(() =>
   apps.value
     .filter((app) => app.id === 'browser' || app.id === 'terminal' || app.id === 'files')
@@ -160,6 +155,7 @@ const homeBadge = computed(() => {
           :theme="effectiveTheme"
           :is-focused="terminalWindow.isFocused"
           :window-mode="terminalWindow.windowMode"
+          body-class="desktop-window__body--flush"
           :x="terminalWindow.x"
           :y="terminalWindow.y"
           :width="terminalWindow.width"
