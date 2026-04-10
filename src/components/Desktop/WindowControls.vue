@@ -7,6 +7,7 @@ defineProps<{
 
 defineEmits<{
   minimize: []
+  maximize: []
   close: []
 }>()
 </script>
@@ -26,7 +27,11 @@ defineEmits<{
       type="button"
       @click.stop="$emit('minimize')"
     />
-    <span class="window-controls__macos-action window-controls__macos-action--maximize" />
+    <button
+      class="window-controls__macos-action window-controls__macos-action--maximize"
+      type="button"
+      @click.stop="$emit('maximize')"
+    />
   </div>
 
   <div
@@ -47,6 +52,7 @@ defineEmits<{
       :class="`window-controls__system-action--${theme}`"
       type="button"
       aria-label="maximize"
+      @click.stop="$emit('maximize')"
     >
       <span />
     </button>

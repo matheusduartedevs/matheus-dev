@@ -1,0 +1,19 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="6" y="8" width="52" height="48" rx="14" fill="#FFFFFF"/>
+  <path d="M6 22H58" stroke="#E0E6F6" stroke-width="2"/>
+  <circle cx="15" cy="15" r="2.5" fill="#FF5F57"/>
+  <circle cx="22" cy="15" r="2.5" fill="#FEBC2E"/>
+  <circle cx="29" cy="15" r="2.5" fill="#28C840"/>
+  <path d="M18 36C18 28.268 24.268 22 32 22C39.732 22 46 28.268 46 36C46 43.732 39.732 50 32 50C24.268 50 18 43.732 18 36Z" fill="url(#paint0_linear_browser_macos)"/>
+  <path d="M32 22C35.5902 22 38.5 28.268 38.5 36C38.5 43.732 35.5902 50 32 50C28.4098 50 25.5 43.732 25.5 36C25.5 28.268 28.4098 22 32 22Z" fill="#F9FCFF"/>
+  <path d="M18 36H46" stroke="#F9FCFF" stroke-width="2"/>
+  <path d="M21 30H43" stroke="#F9FCFF" stroke-width="2"/>
+  <path d="M21 42H43" stroke="#F9FCFF" stroke-width="2"/>
+  <defs>
+    <linearGradient id="paint0_linear_browser_macos" x1="18" y1="22" x2="46" y2="50" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3B82F6"/>
+      <stop offset="0.5" stop-color="#8B5CF6"/>
+      <stop offset="1" stop-color="#F97316"/>
+    </linearGradient>
+  </defs>
+</svg>

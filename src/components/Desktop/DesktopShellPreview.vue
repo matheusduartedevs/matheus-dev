@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import AppWindow from '@/components/Desktop/AppWindow.vue'
+import DesktopAppIcon from '@/components/Desktop/DesktopAppIcon.vue'
 import BrowserWindowContent from '@/components/Desktop/BrowserWindowContent.vue'
 import DesktopFooter from '@/components/Desktop/DesktopFooter.vue'
 import FileWindowContent from '@/components/Desktop/FileWindowContent.vue'
@@ -48,41 +49,14 @@ const lastMinimizedWindow = computed(() => {
   return minimizedWindows.sort((left, right) => right.zIndex - left.zIndex)[0] ?? null
 })
 
-const browserButtonLabel = computed(() => {
-  if (browserWindowVisible.value) {
-    return 'Navegador aberto'
-  }
-
-  if (browserWindow.value?.isMinimized) {
-    return 'Restaurar navegador'
-  }
-
-  return 'Abrir navegador'
-})
-
-const terminalButtonLabel = computed(() => {
-  if (terminalWindowVisible.value) {
-    return 'Terminal aberto'
-  }
-
-  if (terminalWindow.value?.isMinimized) {
-    return 'Restaurar terminal'
-  }
-
-  return 'Abrir terminal'
-})
-
-const filesButtonLabel = computed(() => {
-  if (filesWindowVisible.value) {
-    return 'Arquivos abertos'
-  }
-
-  if (filesWindow.value?.isMinimized) {
-    return 'Restaurar arquivos'
-  }
-
-  return 'Abrir arquivos'
-})
+const desktopShortcuts = computed(() =>
+  apps.value
+    .filter((app) => app.id === 'browser' || app.id === 'terminal' || app.id === 'files')
+    .map((app) => ({
+      app,
+      isOpen: visibleWindows.value.some((window) => window.appId === app.id),
+    })),
+)
 
 const homeBadge = computed(() => {
   if (props.effectiveTheme === 'macos') {
@@ -138,43 +112,43 @@ const homeBadge = computed(() => {
           </div>
         </div>
 
-        <div v-if="!visibleWindows.length" class="desktop-home-action">
-          <div class="desktop-home-action__buttons">
-            <button
-              class="desktop-primary-button"
-              type="button"
-              @click="desktopStore.openWindow('browser')"
-            >
-              {{ browserButtonLabel }}
-            </button>
-            <button
-              class="desktop-primary-button desktop-primary-button--terminal"
-              type="button"
-              @click="desktopStore.openWindow('terminal')"
-            >
-              {{ terminalButtonLabel }}
-            </button>
-            <button
-              class="desktop-primary-button desktop-primary-button--files"
-              type="button"
-              @click="desktopStore.openWindow('files')"
-            >
-              {{ filesButtonLabel }}
-            </button>
-          </div>
+        <div class="desktop-shortcuts">
+          <button
+            v-for="{ app, isOpen } in desktopShortcuts"
+            :key="app.id"
+            class="desktop-shortcut"
+            :class="{ 'is-open': isOpen }"
+            type="button"
+            @click="desktopStore.activateApp(app.id)"
+          >
+            <span class="desktop-shortcut__icon">
+              <DesktopAppIcon :app="app" size="lg" />
+            </span>
+            <span class="desktop-shortcut__label">{{ app.shortLabel }}</span>
+          </button>
         </div>
 
-        <DesktopFooter :theme="effectiveTheme" />
+        <DesktopFooter
+          :theme="effectiveTheme"
+          :apps="apps"
+          :windows="windows"
+          @activate-app="desktopStore.activateApp"
+        />
 
         <AppWindow
           v-if="browserWindowVisible && browserWindow"
           :title="browserWindow.title"
           :theme="effectiveTheme"
           :is-focused="browserWindow.isFocused"
+          :window-mode="browserWindow.windowMode"
+          :x="browserWindow.x"
+          :y="browserWindow.y"
+          :width="browserWindow.width"
+          :height="browserWindow.height"
           :z-index="browserWindow.zIndex"
-          fill
           @focus="desktopStore.focusWindow('browser')"
           @minimize="desktopStore.minimizeWindow('browser')"
+          @maximize="desktopStore.toggleWindowMode('browser')"
           @close="desktopStore.closeWindow('browser')"
         >
           <BrowserWindowContent :content="content" />
@@ -185,10 +159,15 @@ const homeBadge = computed(() => {
           :title="terminalWindow.title"
           :theme="effectiveTheme"
           :is-focused="terminalWindow.isFocused"
+          :window-mode="terminalWindow.windowMode"
+          :x="terminalWindow.x"
+          :y="terminalWindow.y"
+          :width="terminalWindow.width"
+          :height="terminalWindow.height"
           :z-index="terminalWindow.zIndex"
-          fill
           @focus="desktopStore.focusWindow('terminal')"
           @minimize="desktopStore.minimizeWindow('terminal')"
+          @maximize="desktopStore.toggleWindowMode('terminal')"
           @close="desktopStore.closeWindow('terminal')"
         >
           <TerminalWindowContent :content="content" :theme="effectiveTheme" />
@@ -199,6 +178,7 @@ const homeBadge = computed(() => {
           :title="filesWindow.title"
           :theme="effectiveTheme"
           :is-focused="filesWindow.isFocused"
+          :window-mode="filesWindow.windowMode"
           :z-index="filesWindow.zIndex"
           :x="filesWindow.x"
           :y="filesWindow.y"
@@ -206,19 +186,11 @@ const homeBadge = computed(() => {
           :height="filesWindow.height"
           @focus="desktopStore.focusWindow('files')"
           @minimize="desktopStore.minimizeWindow('files')"
+          @maximize="desktopStore.toggleWindowMode('files')"
           @close="desktopStore.closeWindow('files')"
         >
           <FileWindowContent :content="content" :theme="effectiveTheme" />
         </AppWindow>
-
-        <button
-          v-if="lastMinimizedWindow"
-          class="desktop-restore-chip"
-          type="button"
-          @click="desktopStore.openWindow(lastMinimizedWindow.appId)"
-        >
-          Restaurar {{ lastMinimizedWindow.title }}
-        </button>
       </div>
     </section>
   </section>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import WindowControls from '@/components/Desktop/WindowControls.vue'
+import type { DesktopWindowMode } from '@/types/desktop'
 import type { OsTheme } from '@/types/theme'
 
 withDefaults(
@@ -7,25 +8,25 @@ withDefaults(
     title: string
     theme: OsTheme
     isFocused: boolean
+    windowMode: DesktopWindowMode
     x?: number
     y?: number
     width?: number
     height?: number
     zIndex: number
-    fill?: boolean
   }>(),
   {
     x: 0,
     y: 0,
     width: 0,
     height: 0,
-    fill: false,
   },
 )
 
 defineEmits<{
   focus: []
   minimize: []
+  maximize: []
   close: []
 }>()
 </script>
@@ -33,12 +34,12 @@ defineEmits<{
 <template>
   <article
     class="desktop-window"
-    :class="[`theme-${theme}`, { 'is-focused': isFocused, 'is-fill': fill }]"
+    :class="[`theme-${theme}`, `is-${windowMode}`, { 'is-focused': isFocused }]"
     :style="{
-      top: fill ? undefined : `${y}px`,
-      left: fill ? undefined : `${x}px`,
-      width: fill ? undefined : `${width}px`,
-      height: fill ? undefined : `${height}px`,
+      top: windowMode === 'half' ? `${y}px` : undefined,
+      left: windowMode === 'half' ? `${x}px` : undefined,
+      width: windowMode === 'half' ? `${width}px` : undefined,
+      height: windowMode === 'half' ? `${height}px` : undefined,
       zIndex,
     }"
     @pointerdown="$emit('focus')"
@@ -48,6 +49,7 @@ defineEmits<{
       <WindowControls
         :theme="theme"
         @minimize="$emit('minimize')"
+        @maximize="$emit('maximize')"
         @close="$emit('close')"
       />
     </header>

@@ -2,11 +2,47 @@ import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 
 import type { DesktopAppDefinition, DesktopAppId, DesktopWindow } from '@/types/desktop'
+import browserLinuxIcon from '@/assets/icons/browser-linux.svg'
+import browserMacosIcon from '@/assets/icons/browser-macos.svg'
+import browserWindowsIcon from '@/assets/icons/browser-windows.svg'
+import filesLinuxIcon from '@/assets/icons/files-linux.svg'
+import filesMacosIcon from '@/assets/icons/files-macos.svg'
+import filesWindowsIcon from '@/assets/icons/files-windows.svg'
+import terminalLinuxIcon from '@/assets/icons/terminal-linux.svg'
+import terminalMacosIcon from '@/assets/icons/terminal-macos.svg'
+import terminalWindowsIcon from '@/assets/icons/terminal-windows.svg'
 
 const desktopApps: DesktopAppDefinition[] = [
-  { id: 'browser', title: 'Browser', shortLabel: 'Browser' },
-  { id: 'terminal', title: 'Terminal', shortLabel: 'Terminal' },
-  { id: 'files', title: 'Files', shortLabel: 'Files' },
+  {
+    id: 'browser',
+    title: 'Browser',
+    shortLabel: 'Browser',
+    icons: {
+      windows: browserWindowsIcon,
+      macos: browserMacosIcon,
+      linux: browserLinuxIcon,
+    },
+  },
+  {
+    id: 'terminal',
+    title: 'Terminal',
+    shortLabel: 'Terminal',
+    icons: {
+      windows: terminalWindowsIcon,
+      macos: terminalMacosIcon,
+      linux: terminalLinuxIcon,
+    },
+  },
+  {
+    id: 'files',
+    title: 'Files',
+    shortLabel: 'Files',
+    icons: {
+      windows: filesWindowsIcon,
+      macos: filesMacosIcon,
+      linux: filesLinuxIcon,
+    },
+  },
 ]
 
 const createWindows = (): DesktopWindow[] => [
@@ -18,10 +54,11 @@ const createWindows = (): DesktopWindow[] => [
     isMinimized: false,
     isFocused: false,
     zIndex: 1,
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0,
+    windowMode: 'half',
+    x: 72,
+    y: 112,
+    width: 980,
+    height: 620,
   },
   {
     id: 'terminal',
@@ -31,10 +68,11 @@ const createWindows = (): DesktopWindow[] => [
     isMinimized: false,
     isFocused: false,
     zIndex: 1,
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0,
+    windowMode: 'half',
+    x: 136,
+    y: 148,
+    width: 860,
+    height: 520,
   },
   {
     id: 'files',
@@ -44,10 +82,11 @@ const createWindows = (): DesktopWindow[] => [
     isMinimized: false,
     isFocused: false,
     zIndex: 1,
-    x: 180,
-    y: 100,
-    width: 1200,
-    height: 600,
+    windowMode: 'half',
+    x: 200,
+    y: 88,
+    width: 940,
+    height: 610,
   },
 ]
 
@@ -104,6 +143,17 @@ export const useDesktopStore = defineStore('desktop', () => {
     focusWindow(appId)
   }
 
+  const activateApp = (appId: DesktopAppId) => {
+    const window = getWindow(appId)
+
+    if (!window || !window.isOpen || window.isMinimized) {
+      openWindow(appId)
+      return
+    }
+
+    focusWindow(appId)
+  }
+
   const minimizeWindow = (appId: DesktopAppId) => {
     const window = getWindow(appId)
 
@@ -114,6 +164,17 @@ export const useDesktopStore = defineStore('desktop', () => {
     window.isMinimized = true
     window.isFocused = false
     syncFocusToTopWindow()
+  }
+
+  const toggleWindowMode = (appId: DesktopAppId) => {
+    const window = getWindow(appId)
+
+    if (!window || !window.isOpen) {
+      return
+    }
+
+    window.windowMode = window.windowMode === 'fullscreen' ? 'half' : 'fullscreen'
+    focusWindow(appId)
   }
 
   const closeWindow = (appId: DesktopAppId) => {
@@ -135,8 +196,10 @@ export const useDesktopStore = defineStore('desktop', () => {
     visibleWindows,
     getWindow,
     openWindow,
+    activateApp,
     focusWindow,
     minimizeWindow,
+    toggleWindowMode,
     closeWindow,
   }
 })
