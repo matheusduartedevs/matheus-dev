@@ -6,6 +6,7 @@ import AppWindow from '@/components/Desktop/AppWindow.vue'
 import DesktopAppIcon from '@/components/Desktop/DesktopAppIcon.vue'
 import BrowserWindowContent from '@/components/Desktop/BrowserWindowContent.vue'
 import DesktopFooter from '@/components/Desktop/DesktopFooter.vue'
+import DesktopThemeController from '@/components/Desktop/DesktopThemeController.vue'
 import FileWindowContent from '@/components/Desktop/FileWindowContent.vue'
 import TerminalWindowContent from '@/components/Desktop/TerminalWindowContent.vue'
 import { useDesktopStore } from '@/stores/desktop'
@@ -16,8 +17,6 @@ import type { OsTheme } from '@/types/theme'
 const props = defineProps<{
   content: PortfolioContent
   themes: readonly OsTheme[]
-  detectedTheme: OsTheme
-  selectedTheme: OsTheme | null
   effectiveTheme: OsTheme
   isSystemTheme: boolean
   shellStatus: string
@@ -53,59 +52,20 @@ const desktopShortcuts = computed(() =>
     })),
 )
 
-const homeBadge = computed(() => {
-  if (props.effectiveTheme === 'macos') {
-    return 'Desktop macOS'
-  }
-
-  if (props.effectiveTheme === 'linux') {
-    return 'Desktop Linux'
-  }
-
-  return 'Desktop Windows'
-})
 </script>
 
 <template>
   <section class="desktop-shell">
     <section class="desktop-canvas" :class="`theme-${effectiveTheme}`">
       <div class="desktop-surface" :class="`theme-${effectiveTheme}`">
-        <div class="desktop-theme-controller">
-          <div class="desktop-theme-controller__meta">
-            <span class="status-pill">{{ homeBadge }}</span>
-            <span class="desktop-theme-controller__state">{{ shellStatus }}</span>
-          </div>
-
-          <div class="control-group">
-            <span class="control-label">Origem do tema</span>
-
-            <button
-              class="source-button"
-              :class="{ 'is-active': isSystemTheme }"
-              type="button"
-              @click="$emit('clearTheme')"
-            >
-              Seguir sistema detectado
-            </button>
-          </div>
-
-          <div class="control-group">
-            <span class="control-label">Trocar sistema</span>
-
-            <div class="theme-switcher">
-              <button
-                v-for="theme in themes"
-                :key="theme"
-                class="theme-button"
-                :class="{ 'is-active': effectiveTheme === theme && !isSystemTheme }"
-                type="button"
-                @click="$emit('selectTheme', theme)"
-              >
-                {{ theme }}
-              </button>
-            </div>
-          </div>
-        </div>
+        <DesktopThemeController
+          :themes="themes"
+          :effective-theme="effectiveTheme"
+          :is-system-theme="isSystemTheme"
+          :shell-status="shellStatus"
+          @clear-theme="$emit('clearTheme')"
+          @select-theme="$emit('selectTheme', $event)"
+        />
 
         <div class="desktop-shortcuts">
           <button

@@ -112,9 +112,71 @@ a {
   transform: rotate(-16deg);
 }
 
-.desktop-theme-controller {
+.desktop-theme-launcher {
   position: absolute;
   top: 1.25rem;
+  right: 1.25rem;
+  z-index: 220;
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
+  width: 5.75rem;
+  padding: 0.7rem 0.55rem;
+  border: 1px solid transparent;
+  border-radius: 1rem;
+  background: transparent;
+  color: #f8fbff;
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+.desktop-theme-launcher:hover,
+.desktop-theme-launcher.is-active {
+  transform: translateY(-1px);
+  background: color-mix(in srgb, var(--color-surface) 16%, transparent);
+  border-color: color-mix(in srgb, var(--color-accent) 28%, transparent);
+}
+
+.desktop-theme-launcher__glyph {
+  display: inline-grid;
+  place-items: center;
+  width: 4rem;
+  height: 4rem;
+  padding: 0.45rem;
+  border-radius: 1.1rem;
+  background: color-mix(in srgb, var(--color-surface) 22%, transparent);
+  box-shadow: 0 14px 24px color-mix(in srgb, var(--color-window-shadow) 24%, transparent);
+  backdrop-filter: blur(10px);
+  overflow: visible;
+}
+
+.desktop-theme-launcher__image {
+  display: none;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+[data-os-theme='windows'] .desktop-theme-launcher__image--windows,
+[data-os-theme='macos'] .desktop-theme-launcher__image--macos,
+[data-os-theme='linux'] .desktop-theme-launcher__image--linux {
+  display: block;
+}
+
+.desktop-theme-launcher__label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
+}
+
+.desktop-theme-controller {
+  position: absolute;
+  top: 1rem;
   right: 1.25rem;
   z-index: 220;
   display: grid;
@@ -128,90 +190,98 @@ a {
   backdrop-filter: blur(18px);
 }
 
-.desktop-theme-controller__meta {
+.desktop-theme-controller__header {
   display: flex;
-  gap: 0.75rem;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 1rem;
+}
+
+.desktop-theme-controller__heading {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.desktop-theme-controller__eyebrow {
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.desktop-theme-controller__title {
+  color: var(--color-text);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+[data-os-theme='macos'] .desktop-theme-launcher {
+  color: rgba(52, 60, 73, 0.92);
+}
+
+.desktop-theme-controller__meta {
+  display: block;
 }
 
 .desktop-theme-controller__state {
   color: var(--color-text-muted);
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 0.9rem;
+  font-weight: 500;
 }
 
-.control-group {
+.desktop-theme-controller__options {
   display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.75rem;
 }
 
-.control-label {
-  color: var(--color-text-muted);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.status-pill {
-  display: inline-flex;
-  align-items: center;
-  min-height: 2rem;
-  padding: 0.4rem 0.8rem;
-  border: 1px solid var(--color-border-subtle);
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--color-accent) 16%, transparent);
-  color: var(--color-text);
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-
-.source-button,
 .theme-button {
+  display: grid;
+  gap: 0.3rem;
+  align-content: start;
+  min-height: 5.25rem;
+  padding: 0.95rem 1rem;
   border: 1px solid var(--color-border-subtle);
-  border-radius: 999px;
+  border-radius: 1.15rem;
   color: var(--color-text);
+  text-align: left;
   cursor: pointer;
   transition:
     transform 160ms ease,
     background-color 160ms ease,
-    border-color 160ms ease;
-}
-
-.source-button,
-.theme-button {
+    border-color 160ms ease,
+    box-shadow 160ms ease;
   background: color-mix(in srgb, var(--color-surface-alt) 92%, transparent);
 }
 
-.source-button:hover,
 .theme-button:hover {
   transform: translateY(-1px);
 }
 
-.source-button.is-active,
 .theme-button.is-active {
   border-color: color-mix(in srgb, var(--color-accent) 55%, var(--color-border-subtle));
   background: color-mix(in srgb, var(--color-accent) 22%, var(--color-surface-alt));
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--color-window-shadow) 18%, transparent);
 }
 
-.source-button {
-  min-height: 3rem;
-  padding: 0.75rem 1rem;
-  font-weight: 600;
-}
-
-.theme-switcher {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.75rem;
-}
-
-.theme-button {
-  min-height: 3rem;
-  padding: 0.75rem 1rem;
-  text-transform: capitalize;
+.theme-button__title {
+  font-size: 1rem;
   font-weight: 700;
+  text-transform: capitalize;
+}
+
+.theme-button__meta {
+  color: var(--color-text-muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.theme-button--system {
+  grid-column: 1 / -1;
 }
 
 .desktop-shortcuts {
@@ -275,6 +345,10 @@ a {
 .desktop-surface.theme-linux .desktop-shortcuts {
   top: 4.25rem;
   left: 4.75rem;
+}
+
+.desktop-surface.theme-linux .desktop-theme-launcher {
+  top: 4rem;
 }
 
 .desktop-footer {
@@ -1505,6 +1579,11 @@ a {
 @media (max-width: 960px) {
   .app-shell {
     padding: 1rem;
+  }
+
+  .desktop-theme-launcher {
+    top: 1rem;
+    right: 1rem;
   }
 
   .desktop-theme-controller {
