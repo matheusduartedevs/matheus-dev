@@ -3,9 +3,9 @@ import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import AppWindow from '@/components/Desktop/AppWindow.vue'
-import DesktopAppIcon from '@/components/Desktop/DesktopAppIcon.vue'
 import BrowserWindowContent from '@/components/Desktop/BrowserWindowContent.vue'
 import DesktopFooter from '@/components/Desktop/DesktopFooter.vue'
+import DesktopShortcuts from '@/components/Desktop/DesktopShortcuts.vue'
 import DesktopThemeController from '@/components/Desktop/DesktopThemeController.vue'
 import FileWindowContent from '@/components/Desktop/FileWindowContent.vue'
 import TerminalWindowContent from '@/components/Desktop/TerminalWindowContent.vue'
@@ -43,15 +43,6 @@ const browserWindowVisible = isWindowVisible('browser')
 const terminalWindowVisible = isWindowVisible('terminal')
 const filesWindowVisible = isWindowVisible('files')
 
-const desktopShortcuts = computed(() =>
-  apps.value
-    .filter((app) => app.id === 'browser' || app.id === 'terminal' || app.id === 'files')
-    .map((app) => ({
-      app,
-      isOpen: visibleWindows.value.some((window) => window.appId === app.id),
-    })),
-)
-
 </script>
 
 <template>
@@ -67,21 +58,11 @@ const desktopShortcuts = computed(() =>
           @select-theme="$emit('selectTheme', $event)"
         />
 
-        <div class="desktop-shortcuts">
-          <button
-            v-for="{ app, isOpen } in desktopShortcuts"
-            :key="app.id"
-            class="desktop-shortcut"
-            :class="{ 'is-open': isOpen }"
-            type="button"
-            @click="desktopStore.activateApp(app.id)"
-          >
-            <span class="desktop-shortcut__icon">
-              <DesktopAppIcon :app="app" size="lg" />
-            </span>
-            <span class="desktop-shortcut__label">{{ app.shortLabel }}</span>
-          </button>
-        </div>
+        <DesktopShortcuts
+          :apps="apps"
+          :windows="windows"
+          @activate-app="desktopStore.activateApp"
+        />
 
         <DesktopFooter
           :theme="effectiveTheme"
