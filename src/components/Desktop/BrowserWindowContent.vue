@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { getResumeOpenHref } from '@/lib/resume'
 import type { PortfolioContent } from '@/types/portfolio'
 
 defineProps<{
@@ -86,7 +87,7 @@ defineProps<{
 
         <a
           class="browser-contact browser-contact--resume"
-          :href="content.resume.href"
+          :href="getResumeOpenHref(content.resume)"
           target="_blank"
           rel="noreferrer"
         >

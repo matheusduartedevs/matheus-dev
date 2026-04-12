@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { getResumeOpenHref } from '@/lib/resume'
 import type { PortfolioContent } from '@/types/portfolio'
 
 defineProps<{
@@ -13,7 +14,12 @@ defineProps<{
       <h1 class="mobile-title">{{ content.name }}</h1>
       <p class="mobile-subtitle">{{ content.title }}</p>
       <p class="mobile-summary">{{ content.mobileIntro }}</p>
-      <a class="resume-link" :href="content.resume.href" target="_blank" rel="noreferrer">
+      <a
+        class="resume-link"
+        :href="getResumeOpenHref(content.resume)"
+        target="_blank"
+        rel="noreferrer"
+      >
         {{ content.resume.label }}
       </a>
     </header>

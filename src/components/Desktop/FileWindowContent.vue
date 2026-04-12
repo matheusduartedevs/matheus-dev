@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import { getResumeDownloadHref, getResumeOpenHref } from '@/lib/resume'
 import type { PortfolioContent } from '@/types/portfolio'
 import type { OsTheme } from '@/types/theme'
 
-defineProps<{
+const props = defineProps<{
   content: PortfolioContent
   theme: OsTheme
 }>()
@@ -17,6 +18,10 @@ const toolbarByTheme = {
     summary: '1 documento',
   },
 } as const
+
+const openResume = () => {
+  window.open(getResumeOpenHref(props.content.resume), '_blank', 'noopener,noreferrer')
+}
 </script>
 
 <template>
@@ -42,15 +47,21 @@ const toolbarByTheme = {
           <span>Ação</span>
         </div>
 
-        <div class="file-window__row" :class="`file-window__row--${theme}`">
+        <div
+          class="file-window__row"
+          :class="`file-window__row--${theme}`"
+          @dblclick="openResume"
+        >
           <div class="file-window__file">
             <span class="file-window__file-badge">PDF</span>
             <span class="file-window__file-name">{{ content.resume.label }}</span>
           </div>
           <span class="file-window__meta">Documento PDF</span>
           <div class="file-window__actions">
-            <a :href="content.resume.href" target="_blank" rel="noreferrer">Abrir</a>
-            <a :href="content.resume.href" download>Download</a>
+            <a :href="getResumeOpenHref(content.resume)" target="_blank" rel="noreferrer">Abrir</a>
+            <a :href="getResumeDownloadHref(content.resume)" :download="content.resume.downloadName">
+              Download
+            </a>
           </div>
         </div>
       </section>

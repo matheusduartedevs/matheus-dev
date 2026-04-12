@@ -50,7 +50,9 @@ export type PortfolioContact = {
 
 export type PortfolioResume = {
   label: string
-  href: string
+  publicPath: string
+  downloadName: string
+  sourceFilePath: string
 }
 
 export type PortfolioContent = {

@@ -1,4 +1,5 @@
 import type { PortfolioContent } from '@/types/portfolio'
+import { getResumeOpenHref } from '@/lib/resume'
 import type {
   TerminalCommandContext,
   TerminalCommandDefinition,
@@ -88,7 +89,7 @@ const getContentSection = (content: PortfolioContent, target: string) => {
   }
 
   if (normalizedTarget === 'resume') {
-    return [content.resume.label, content.resume.href]
+    return [content.resume.label, getResumeOpenHref(content.resume), content.resume.sourceFilePath]
   }
 
   return null
@@ -230,7 +231,8 @@ const createCommandList = (): TerminalCommandDefinition[] => [
     aliases: ['curriculo'],
     description: 'Mostra o caminho do currículo.',
     usage: 'resume',
-    execute: ({ content }) => print([content.resume.label, content.resume.href], 'system'),
+    execute: ({ content }) =>
+      print([content.resume.label, getResumeOpenHref(content.resume), content.resume.sourceFilePath], 'system'),
   },
   {
     name: 'ls',

@@ -146,11 +146,6 @@ export const portfolioContent: PortfolioContent = {
       href: 'mailto:matheus.duartesilva42@gmail.com',
     },
     {
-      label: 'Telefone',
-      value: '+55 11 95368-6747',
-      href: 'tel:+5511953686747',
-    },
-    {
       label: 'Localização',
       value: 'São Paulo, Brasil',
       href: '#',
@@ -158,16 +153,18 @@ export const portfolioContent: PortfolioContent = {
     {
       label: 'LinkedIn',
       value: 'Adicionar link',
-      href: '#',
+      href: 'https://www.linkedin.com/in/matheus-duarte-7bb04b266',
     },
     {
       label: 'GitHub',
       value: 'Adicionar link',
-      href: '#',
+      href: 'https://github.com/matheusduartedevs',
     },
   ],
   resume: {
     label: 'Meu currículo',
-    href: '/resume.pdf',
+    publicPath: '/documents/matheus-duarte-cv.pdf',
+    downloadName: 'matheus-duarte-cv.pdf',
+    sourceFilePath: 'public/documents/matheus-duarte-cv.pdf',
   },
 }
