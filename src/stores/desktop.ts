@@ -35,8 +35,8 @@ const desktopApps: DesktopAppDefinition[] = [
   },
   {
     id: 'files',
-    title: 'Files',
-    shortLabel: 'Files',
+    title: 'Arquivos',
+    shortLabel: 'Arquivos',
     icons: {
       windows: filesWindowsIcon,
       macos: filesMacosIcon,
@@ -85,7 +85,7 @@ const createWindows = (): DesktopWindow[] => [
     windowMode: 'half',
     x: 200,
     y: 88,
-    width: 940,
+    width: 1100,
     height: 610,
   },
 ]

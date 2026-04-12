@@ -6,6 +6,17 @@ defineProps<{
   content: PortfolioContent
   theme: OsTheme
 }>()
+const toolbarByTheme = {
+  windows: {
+    summary: '1 item',
+  },
+  macos: {
+    summary: '1 arquivo',
+  },
+  linux: {
+    summary: '1 documento',
+  },
+} as const
 </script>
 
 <template>
@@ -16,16 +27,14 @@ defineProps<{
         <span>/</span>
         <span>Documentos</span>
       </div>
+
+      <div class="file-window__toolbar-status">
+        <span class="file-window__toolbar-pill">{{ toolbarByTheme[theme].summary }}</span>
+        <span class="file-window__toolbar-pill">PDF</span>
+      </div>
     </div>
 
     <div class="file-window__layout">
-      <aside class="file-window__sidebar">
-        <span class="file-window__sidebar-title">Locais</span>
-        <button class="file-window__sidebar-item is-active" type="button">Documentos</button>
-        <button class="file-window__sidebar-item" type="button">Downloads</button>
-        <button class="file-window__sidebar-item" type="button">Área de trabalho</button>
-      </aside>
-
       <section class="file-window__content">
         <div class="file-window__header-row">
           <span>Nome</span>
@@ -40,7 +49,7 @@ defineProps<{
           </div>
           <span class="file-window__meta">Documento PDF</span>
           <div class="file-window__actions">
-            <a :href="content.resume.href" target="_blank" rel="noreferrer">Open</a>
+            <a :href="content.resume.href" target="_blank" rel="noreferrer">Abrir</a>
             <a :href="content.resume.href" download>Download</a>
           </div>
         </div>

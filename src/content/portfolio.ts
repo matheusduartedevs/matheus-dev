@@ -167,7 +167,7 @@ export const portfolioContent: PortfolioContent = {
     },
   ],
   resume: {
-    label: 'Baixar currículo em PDF',
+    label: 'Meu currículo',
     href: '/resume.pdf',
   },
 }
