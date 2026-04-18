@@ -1,7 +1,7 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 
-import type { DesktopAppDefinition, DesktopAppId, DesktopWindow } from '@/types/desktop'
+import type { BrowserPage, DesktopAppDefinition, DesktopAppId, DesktopWindow } from '@/types/desktop'
 import browserLinuxIcon from '@/assets/icons/browser-linux.svg'
 import browserMacosIcon from '@/assets/icons/browser-macos.svg'
 import browserWindowsIcon from '@/assets/icons/browser-windows.svg'
@@ -94,12 +94,18 @@ export const useDesktopStore = defineStore('desktop', () => {
   const apps = ref<DesktopAppDefinition[]>(desktopApps)
   const windows = ref<DesktopWindow[]>(createWindows())
   const zIndexCounter = ref(1)
+  const browserHistory = ref<BrowserPage[]>(['home'])
+  const browserHistoryIndex = ref(0)
+  const browserRefreshKey = ref(0)
 
   const visibleWindows = computed(() =>
     windows.value
       .filter((window) => window.isOpen && !window.isMinimized)
       .sort((left, right) => left.zIndex - right.zIndex),
   )
+  const currentBrowserPage = computed(() => browserHistory.value[browserHistoryIndex.value] ?? 'home')
+  const canGoBackBrowser = computed(() => browserHistoryIndex.value > 0)
+  const canGoForwardBrowser = computed(() => browserHistoryIndex.value < browserHistory.value.length - 1)
 
   const getWindow = (appId: DesktopAppId) => windows.value.find((window) => window.appId === appId) ?? null
 
@@ -141,6 +147,47 @@ export const useDesktopStore = defineStore('desktop', () => {
     window.isOpen = true
     window.isMinimized = false
     focusWindow(appId)
+  }
+
+  const pushBrowserHistory = (page: BrowserPage) => {
+    const nextHistory = browserHistory.value.slice(0, browserHistoryIndex.value + 1)
+    nextHistory.push(page)
+    browserHistory.value = nextHistory
+    browserHistoryIndex.value = nextHistory.length - 1
+  }
+
+  const openBrowserPage = (page: BrowserPage) => {
+    const currentPage = currentBrowserPage.value
+
+    if (currentPage === page) {
+      openWindow('browser')
+      return
+    }
+
+    pushBrowserHistory(page)
+    openWindow('browser')
+  }
+
+  const goBackBrowser = () => {
+    if (!canGoBackBrowser.value) {
+      return
+    }
+
+    browserHistoryIndex.value -= 1
+    openWindow('browser')
+  }
+
+  const goForwardBrowser = () => {
+    if (!canGoForwardBrowser.value) {
+      return
+    }
+
+    browserHistoryIndex.value += 1
+    openWindow('browser')
+  }
+
+  const refreshBrowserPage = () => {
+    browserRefreshKey.value += 1
   }
 
   const activateApp = (appId: DesktopAppId) => {
@@ -194,8 +241,16 @@ export const useDesktopStore = defineStore('desktop', () => {
     apps,
     windows,
     visibleWindows,
+    currentBrowserPage,
+    canGoBackBrowser,
+    canGoForwardBrowser,
+    browserRefreshKey,
     getWindow,
     openWindow,
+    openBrowserPage,
+    goBackBrowser,
+    goForwardBrowser,
+    refreshBrowserPage,
     activateApp,
     focusWindow,
     minimizeWindow,

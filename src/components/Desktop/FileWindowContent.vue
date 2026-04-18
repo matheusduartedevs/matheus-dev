@@ -1,12 +1,16 @@
 <script setup lang="ts">
-import { getResumeDownloadHref, getResumeOpenHref } from '@/lib/resume'
+import { useDesktopStore } from '@/stores/desktop'
+import { getResumeDownloadHref } from '@/lib/resume'
 import type { PortfolioContent } from '@/types/portfolio'
 import type { OsTheme } from '@/types/theme'
 
-const props = defineProps<{
+defineProps<{
   content: PortfolioContent
   theme: OsTheme
 }>()
+
+const desktopStore = useDesktopStore()
+
 const toolbarByTheme = {
   windows: {
     summary: '1 item',
@@ -20,7 +24,7 @@ const toolbarByTheme = {
 } as const
 
 const openResume = () => {
-  window.open(getResumeOpenHref(props.content.resume), '_blank', 'noopener,noreferrer')
+  desktopStore.openBrowserPage('resume')
 }
 </script>
 
@@ -58,7 +62,7 @@ const openResume = () => {
           </div>
           <span class="file-window__meta">Documento PDF</span>
           <div class="file-window__actions">
-            <a :href="getResumeOpenHref(content.resume)" target="_blank" rel="noreferrer">Abrir</a>
+            <button type="button" @click="openResume">Abrir</button>
             <a :href="getResumeDownloadHref(content.resume)" :download="content.resume.downloadName">
               Download
             </a>

@@ -1,3 +1,4 @@
+import type { BrowserPage } from '@/types/desktop'
 import type { PortfolioContent } from '@/types/portfolio'
 
 export type TerminalEntryTone = 'input' | 'output' | 'error' | 'system' | 'loading'
@@ -14,6 +15,12 @@ export type TerminalCommandResult =
       type: 'print'
       tone?: Exclude<TerminalEntryTone, 'input'>
       lines: string[]
+    }
+  | {
+      type: 'navigate'
+      tone?: Exclude<TerminalEntryTone, 'input'>
+      lines: string[]
+      page: BrowserPage
     }
   | {
       type: 'clear'

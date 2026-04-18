@@ -5,6 +5,7 @@ export const desktopAppIds = ['browser', 'terminal', 'files'] as const
 export type DesktopAppId = (typeof desktopAppIds)[number]
 export type DesktopWindowMode = 'half' | 'fullscreen'
 export type DesktopAppIcons = Record<OsTheme, string>
+export type BrowserPage = 'home' | 'resume'
 
 export type DesktopWindow = {
   id: DesktopAppId

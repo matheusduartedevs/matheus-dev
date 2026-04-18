@@ -16,6 +16,17 @@ const print = (
   lines,
 })
 
+const navigate = (
+  page: 'resume',
+  lines: string[],
+  tone: Exclude<TerminalEntryTone, 'input'> = 'system',
+): TerminalCommandResult => ({
+  type: 'navigate',
+  page,
+  tone,
+  lines,
+})
+
 const joinInline = (items: string[]) => items.filter(Boolean).join(' · ')
 
 const getCommandLabel = (command: TerminalCommandDefinition) => {
@@ -89,7 +100,7 @@ const getContentSection = (content: PortfolioContent, target: string) => {
   }
 
   if (normalizedTarget === 'resume') {
-    return [content.resume.label, getResumeOpenHref(content.resume), content.resume.sourceFilePath]
+    return null
   }
 
   return null
@@ -229,10 +240,14 @@ const createCommandList = (): TerminalCommandDefinition[] => [
   {
     name: 'resume',
     aliases: ['curriculo'],
-    description: 'Mostra o caminho do currículo.',
+    description: 'Abre o currículo no Browser interno.',
     usage: 'resume',
     execute: ({ content }) =>
-      print([content.resume.label, getResumeOpenHref(content.resume), content.resume.sourceFilePath], 'system'),
+      navigate('resume', [
+        `Abrindo ${content.resume.label} no Browser interno...`,
+        getResumeOpenHref(content.resume),
+        content.resume.sourceFilePath,
+      ]),
   },
   {
     name: 'ls',
@@ -268,6 +283,14 @@ const createCommandList = (): TerminalCommandDefinition[] => [
           ['Uso: cat <about|experience|projects|skills|education|certifications|languages|contact|resume>'],
           'error',
         )
+      }
+
+      if (target === 'resume') {
+        return navigate('resume', [
+          `Abrindo ${content.resume.label} no Browser interno...`,
+          getResumeOpenHref(content.resume),
+          content.resume.sourceFilePath,
+        ])
       }
 
       const section = getContentSection(content, target)

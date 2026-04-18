@@ -1,4 +1,5 @@
 import { computed, onBeforeUnmount, ref } from 'vue'
+import { useDesktopStore } from '@/stores/desktop'
 
 import {
   executeTerminalCommand,
@@ -38,6 +39,7 @@ const createInitialEntries = (): TerminalEntry[] => [
 ]
 
 export const useTerminalSession = (content: PortfolioContent) => {
+  const desktopStore = useDesktopStore()
   const commands: TerminalCommandDefinition[] = getTerminalCommands(content)
   const entries = ref<TerminalEntry[]>(createInitialEntries())
   const commandInput = ref('')
@@ -218,6 +220,9 @@ export const useTerminalSession = (content: PortfolioContent) => {
 
     if (result.type === 'clear') {
       entries.value = createInitialEntries()
+    } else if (result.type === 'navigate') {
+      desktopStore.openBrowserPage(result.page)
+      appendEntry(result.tone ?? 'system', result.lines)
     } else {
       appendEntry(result.tone ?? 'output', result.lines)
     }
