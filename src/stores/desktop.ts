@@ -94,6 +94,7 @@ export const useDesktopStore = defineStore('desktop', () => {
   const apps = ref<DesktopAppDefinition[]>(desktopApps)
   const windows = ref<DesktopWindow[]>(createWindows())
   const zIndexCounter = ref(1)
+  const isDesktopActivated = ref(false)
   const browserHistory = ref<BrowserPage[]>(['home'])
   const browserHistoryIndex = ref(0)
   const browserRefreshKey = ref(0)
@@ -147,6 +148,10 @@ export const useDesktopStore = defineStore('desktop', () => {
     window.isOpen = true
     window.isMinimized = false
     focusWindow(appId)
+  }
+
+  const activateDesktop = () => {
+    isDesktopActivated.value = true
   }
 
   const pushBrowserHistory = (page: BrowserPage) => {
@@ -240,11 +245,13 @@ export const useDesktopStore = defineStore('desktop', () => {
   return {
     apps,
     windows,
+    isDesktopActivated,
     visibleWindows,
     currentBrowserPage,
     canGoBackBrowser,
     canGoForwardBrowser,
     browserRefreshKey,
+    activateDesktop,
     getWindow,
     openWindow,
     openBrowserPage,

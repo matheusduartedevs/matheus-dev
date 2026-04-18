@@ -6,6 +6,7 @@
 
 @import './foundation.css';
 @import './desktop-shell.css';
+@import './desktop-launcher.css';
 @import './desktop-theme.css';
 @import './desktop-shortcuts.css';
 @import './desktop-footer.css';

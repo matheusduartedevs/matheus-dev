@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import AppWindow from '@/components/Desktop/AppWindow.vue'
 import BrowserWindowContent from '@/components/Desktop/BrowserWindowContent.vue'
+import DesktopExperienceLauncher from '@/components/Desktop/DesktopExperienceLauncher.vue'
 import DesktopFooter from '@/components/Desktop/DesktopFooter.vue'
 import DesktopShortcuts from '@/components/Desktop/DesktopShortcuts.vue'
 import DesktopThemeController from '@/components/Desktop/DesktopThemeController.vue'
@@ -28,7 +29,7 @@ defineEmits<{
 }>()
 
 const desktopStore = useDesktopStore()
-const { apps, windows, visibleWindows } = storeToRefs(desktopStore)
+const { apps, isDesktopActivated, windows, visibleWindows } = storeToRefs(desktopStore)
 
 const findWindow = (appId: DesktopAppId) => windows.value.find((window) => window.appId === appId) ?? null
 
@@ -42,13 +43,29 @@ const isWindowVisible = (appId: DesktopAppId) =>
 const browserWindowVisible = isWindowVisible('browser')
 const terminalWindowVisible = isWindowVisible('terminal')
 const filesWindowVisible = isWindowVisible('files')
+const isShellEntering = ref(false)
+
+const handleDesktopActivation = () => {
+  isShellEntering.value = true
+  desktopStore.activateDesktop()
+
+  window.setTimeout(() => {
+    isShellEntering.value = false
+  }, 640)
+}
 
 </script>
 
 <template>
   <section class="desktop-shell">
     <section class="desktop-canvas" :class="`theme-${effectiveTheme}`">
-      <div class="desktop-surface" :class="`theme-${effectiveTheme}`">
+      <div
+        class="desktop-surface"
+        :class="[
+          `theme-${effectiveTheme}`,
+          { 'is-locked': !isDesktopActivated, 'is-entering': isShellEntering },
+        ]"
+      >
         <DesktopThemeController
           :themes="themes"
           :effective-theme="effectiveTheme"
@@ -129,6 +146,14 @@ const filesWindowVisible = isWindowVisible('files')
         >
           <FileWindowContent :content="content" :theme="effectiveTheme" />
         </AppWindow>
+
+        <DesktopExperienceLauncher
+          v-if="!isDesktopActivated"
+          :theme="effectiveTheme"
+          title="Bem-vindo ao meu portfólio"
+          cta-label="Clique para iniciar a experiência"
+          @activate="handleDesktopActivation"
+        />
       </div>
     </section>
   </section>

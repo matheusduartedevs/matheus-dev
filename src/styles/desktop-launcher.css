@@ -1,0 +1,294 @@
+.desktop-surface.is-locked > :not(.desktop-launcher) {
+  pointer-events: none;
+  user-select: none;
+}
+
+.desktop-surface.is-entering > :not(.desktop-launcher) {
+  animation: desktop-shell-unlock 640ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.desktop-surface.is-locked .desktop-window,
+.desktop-surface.is-locked .desktop-shortcuts,
+.desktop-surface.is-locked .desktop-footer,
+.desktop-surface.is-locked .desktop-theme-launcher,
+.desktop-surface.is-locked .desktop-theme-controller {
+  filter: blur(1px);
+}
+
+.desktop-launcher {
+  position: absolute;
+  inset: 0;
+  z-index: 400;
+  display: grid;
+  place-items: center;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  overflow: hidden;
+  animation: desktop-launcher-fade-in 520ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.desktop-launcher__backdrop {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(7, 15, 27, 0.16), rgba(7, 15, 27, 0.42)),
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.08), transparent 42%);
+  backdrop-filter: blur(12px);
+  animation: desktop-launcher-backdrop-in 620ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.desktop-launcher__orb,
+.desktop-launcher__grid {
+  position: absolute;
+}
+
+.desktop-launcher__orb {
+  width: clamp(14rem, 24vw, 24rem);
+  height: clamp(14rem, 24vw, 24rem);
+  border-radius: 999px;
+  filter: blur(2px);
+  opacity: 0.88;
+}
+
+.desktop-launcher__orb--primary {
+  top: 8%;
+  left: 7%;
+}
+
+.desktop-launcher__orb--secondary {
+  right: 8%;
+  bottom: 10%;
+}
+
+.desktop-launcher__grid {
+  inset: auto 8% 8% auto;
+  width: min(24rem, 34vw);
+  height: min(16rem, 22vw);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1.5rem;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 1.25rem 1.25rem;
+  opacity: 0.58;
+  transform: rotate(-12deg);
+}
+
+.desktop-launcher__panel {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 1.15rem;
+  width: min(34rem, 100%);
+  padding: clamp(1.6rem, 3.5vw, 2.75rem);
+  border: 1px solid color-mix(in srgb, var(--color-border-strong) 86%, transparent);
+  border-radius: 1.75rem;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 82%, transparent), color-mix(in srgb, var(--color-surface-alt) 94%, transparent)),
+    linear-gradient(140deg, rgba(255, 255, 255, 0.08), transparent 44%);
+  box-shadow:
+    0 28px 60px color-mix(in srgb, var(--color-window-shadow) 34%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(18px);
+  animation: desktop-launcher-panel-in 620ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.desktop-launcher__eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.desktop-launcher__title {
+  margin: 0;
+  font-size: clamp(2.4rem, 6vw, 4.6rem);
+  font-weight: 800;
+  line-height: 0.96;
+  letter-spacing: -0.05em;
+  color: var(--color-text);
+  text-wrap: balance;
+}
+
+.desktop-launcher__body {
+  max-width: 32rem;
+  margin: 0;
+  font-size: clamp(1rem, 1.5vw, 1.08rem);
+  line-height: 1.65;
+  color: var(--color-text-muted);
+}
+
+.desktop-launcher__button {
+  margin: 0 auto;
+  justify-self: start;
+  min-height: 3.5rem;
+  padding: 0.95rem 1.35rem;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 58%, transparent);
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--color-accent) 94%, white 6%), color-mix(in srgb, var(--color-accent) 84%, black 16%));
+  color: var(--color-accent-contrast);
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  box-shadow:
+    0 14px 28px color-mix(in srgb, var(--color-accent) 32%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.24);
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    filter 160ms ease;
+}
+
+.desktop-launcher__button:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 18px 34px color-mix(in srgb, var(--color-accent) 38%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.26);
+}
+
+.desktop-launcher__button:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--color-accent) 36%, white);
+  outline-offset: 4px;
+}
+
+.desktop-launcher__button:active {
+  transform: translateY(1px);
+  filter: saturate(0.94);
+}
+
+.desktop-launcher__button:disabled {
+  cursor: default;
+}
+
+.desktop-launcher.is-activating {
+  pointer-events: none;
+}
+
+.desktop-launcher.is-activating .desktop-launcher__backdrop {
+  animation: desktop-launcher-backdrop-out 460ms cubic-bezier(0.64, 0, 0.78, 0) forwards;
+}
+
+.desktop-launcher.is-activating .desktop-launcher__panel {
+  animation: desktop-launcher-panel-out 460ms cubic-bezier(0.64, 0, 0.78, 0) forwards;
+}
+
+.desktop-launcher--windows .desktop-launcher__orb--primary {
+  background: radial-gradient(circle at 30% 30%, rgba(180, 242, 255, 0.92), rgba(62, 165, 255, 0.18) 72%, transparent 100%);
+}
+
+.desktop-launcher--windows .desktop-launcher__orb--secondary {
+  background: radial-gradient(circle at 60% 40%, rgba(84, 170, 255, 0.92), rgba(18, 87, 210, 0.16) 72%, transparent 100%);
+}
+
+.desktop-launcher--macos .desktop-launcher__orb--primary {
+  background: radial-gradient(circle at 34% 34%, rgba(255, 219, 122, 0.98), rgba(255, 133, 96, 0.2) 68%, transparent 100%);
+}
+
+.desktop-launcher--macos .desktop-launcher__orb--secondary {
+  background: radial-gradient(circle at 54% 34%, rgba(255, 132, 121, 0.96), rgba(126, 105, 255, 0.16) 74%, transparent 100%);
+}
+
+.desktop-launcher--linux .desktop-launcher__orb--primary {
+  background: radial-gradient(circle at 34% 34%, rgba(255, 154, 162, 0.96), rgba(175, 76, 130, 0.22) 70%, transparent 100%);
+}
+
+.desktop-launcher--linux .desktop-launcher__orb--secondary {
+  background: radial-gradient(circle at 56% 38%, rgba(255, 193, 120, 0.94), rgba(124, 56, 124, 0.16) 72%, transparent 100%);
+}
+
+@keyframes desktop-launcher-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes desktop-launcher-backdrop-in {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0);
+  }
+
+  to {
+    opacity: 1;
+    backdrop-filter: blur(12px);
+  }
+}
+
+@keyframes desktop-launcher-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes desktop-launcher-backdrop-out {
+  from {
+    opacity: 1;
+    backdrop-filter: blur(12px);
+  }
+
+  to {
+    opacity: 0;
+    backdrop-filter: blur(0);
+  }
+}
+
+@keyframes desktop-launcher-panel-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-18px) scale(1.02);
+  }
+}
+
+@keyframes desktop-shell-unlock {
+  from {
+    opacity: 0.58;
+    filter: blur(8px);
+    transform: scale(1.01);
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 960px) {
+  .desktop-launcher {
+    padding: 1rem;
+  }
+
+  .desktop-launcher__panel {
+    gap: 1rem;
+    padding: 1.5rem;
+  }
+
+  .desktop-launcher__grid {
+    right: -1.5rem;
+    bottom: 5%;
+    width: 15rem;
+    height: 10rem;
+  }
+
+  .desktop-launcher__button {
+    width: 100%;
+    justify-self: stretch;
+  }
+}
