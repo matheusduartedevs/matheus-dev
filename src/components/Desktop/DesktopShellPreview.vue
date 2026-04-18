@@ -14,7 +14,7 @@ import type { DesktopAppId } from '@/types/desktop'
 import type { PortfolioContent } from '@/types/portfolio'
 import type { OsTheme } from '@/types/theme'
 
-const props = defineProps<{
+defineProps<{
   content: PortfolioContent
   themes: readonly OsTheme[]
   effectiveTheme: OsTheme
@@ -77,6 +77,7 @@ const filesWindowVisible = isWindowVisible('files')
           :theme="effectiveTheme"
           :is-focused="browserWindow.isFocused"
           :window-mode="browserWindow.windowMode"
+          body-class="desktop-window__body--flush"
           :x="browserWindow.x"
           :y="browserWindow.y"
           :width="browserWindow.width"
@@ -87,7 +88,7 @@ const filesWindowVisible = isWindowVisible('files')
           @maximize="desktopStore.toggleWindowMode('browser')"
           @close="desktopStore.closeWindow('browser')"
         >
-          <BrowserWindowContent :content="content" />
+          <BrowserWindowContent :content="content" :theme="effectiveTheme" />
         </AppWindow>
 
         <AppWindow

@@ -1,0 +1,670 @@
+.browser-app {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  height: 100%;
+  min-height: 0;
+  border: 1px solid color-mix(in srgb, var(--color-border-subtle) 82%, transparent);
+  border-radius: 1.55rem;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 82%, transparent), color-mix(in srgb, var(--color-surface-alt) 94%, transparent)),
+    radial-gradient(circle at top right, color-mix(in srgb, var(--color-accent) 14%, transparent), transparent 32%);
+  box-shadow:
+    0 28px 60px color-mix(in srgb, var(--color-window-shadow) 22%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+}
+
+.browser-app__chrome {
+  position: sticky;
+  top: -1.1rem;
+  z-index: 1;
+  display: grid;
+  gap: 0.85rem;
+  padding: 1rem 1rem 0.95rem;
+  background: color-mix(in srgb, var(--color-surface) 90%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border-subtle) 84%, transparent);
+  backdrop-filter: blur(24px);
+}
+
+.browser-app__toolbar,
+.browser-app__nav,
+.browser-app__addressbar,
+.browser-app__address-copy,
+.browser-editorial__hero-actions,
+.browser-editorial__primary-links {
+  display: flex;
+  align-items: center;
+}
+
+.browser-app__toolbar {
+  gap: 0.9rem;
+}
+
+.browser-app__nav,
+.browser-editorial__hero-actions,
+.browser-editorial__primary-links {
+  gap: 0.55rem;
+}
+
+.browser-app__icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  min-height: 2.4rem;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--color-border-subtle) 84%, transparent);
+  border-radius: 0.95rem;
+  background: color-mix(in srgb, var(--color-surface-alt) 90%, transparent);
+  color: var(--color-text);
+  font-size: 0.94rem;
+  cursor: pointer;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease;
+}
+
+.browser-app__icon-button:hover,
+.browser-app__cta:hover,
+.browser-editorial__primary-link:hover,
+.browser-editorial__contact-item:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--color-accent) 40%, var(--color-border-subtle));
+}
+
+.browser-app__addressbar {
+  flex: 1;
+  gap: 0.8rem;
+  min-width: 0;
+  min-height: 2.9rem;
+  padding: 0 0.95rem;
+  border: 1px solid color-mix(in srgb, var(--color-border-subtle) 78%, transparent);
+  border-radius: 1.1rem;
+  background: color-mix(in srgb, var(--color-bg) 20%, var(--color-surface-alt));
+}
+
+.browser-app__address-indicator {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-accent) 82%, #fff);
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--color-accent) 18%, transparent);
+}
+
+.browser-app__address-copy {
+  flex: 1;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.browser-app__address-domain {
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.browser-app__page {
+  display: grid;
+  min-height: 0;
+  overflow: auto;
+}
+
+.browser-editorial,
+.browser-editorial__hero,
+.browser-editorial__lead,
+.browser-editorial__section,
+.browser-editorial__section-head,
+.browser-editorial__project-list,
+.browser-editorial__project,
+.browser-editorial__experience-list,
+.browser-editorial__experience,
+.browser-editorial__capabilities,
+.browser-editorial__footer-grid,
+.browser-editorial__footer-column,
+.browser-editorial__stack,
+.browser-editorial__contact-list,
+.browser-editorial__contact-item,
+.browser-editorial__language-list,
+.browser-editorial__language-item,
+.browser-editorial__skill-columns,
+.browser-editorial__skill-column,
+.browser-editorial__aside,
+.browser-editorial__aside-block,
+.browser-editorial__metric,
+.browser-editorial__experience-meta,
+.browser-editorial__experience-body,
+.browser-editorial__project-meta,
+.browser-editorial__primary-link {
+  display: grid;
+}
+
+.browser-editorial {
+  gap: clamp(2.75rem, 5vw, 4.75rem);
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.browser-editorial__hero {
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: start;
+  padding-bottom: clamp(2rem, 4vw, 3rem);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border-subtle) 72%, transparent);
+}
+
+.browser-editorial__lead {
+  gap: 1rem;
+}
+
+.browser-editorial__hero-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(18rem, 0.72fr);
+  gap: clamp(1.5rem, 3vw, 3rem);
+  align-items: start;
+}
+
+.browser-editorial__eyebrow,
+.browser-editorial__section-label,
+.browser-editorial__stack-label,
+.browser-editorial__meta-label,
+.browser-editorial__primary-link span,
+.browser-editorial__contact-item span,
+.browser-editorial__metric span {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.browser-editorial__name {
+  margin: 0;
+  font-family: 'Plus Jakarta Sans', 'Segoe UI', 'Helvetica Neue', sans-serif;
+  font-size: clamp(2.2rem, 3vw, 3.1rem);
+  line-height: 0.96;
+  letter-spacing: -0.04em;
+}
+
+.browser-editorial__headline {
+  max-width: 12ch;
+  margin: 0;
+  font-family: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+  font-size: 4.5rem;
+  line-height: 0.9;
+  letter-spacing: -0.06em;
+  text-wrap: balance;
+}
+
+.browser-editorial__summary,
+.browser-editorial__experience-body p,
+.browser-editorial__stack-item p,
+.browser-editorial__language-item p,
+.browser-editorial__aside-block p,
+.browser-editorial__project-summary {
+  max-width: 66ch;
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 1.06rem;
+  line-height: 1.72;
+}
+
+.browser-editorial__summary {
+  justify-self: start;
+  max-width: 32ch;
+  padding-top: 0.45rem;
+  font-size: 1.32rem;
+  line-height: 1.88;
+  transition: color 180ms ease;
+}
+
+.browser-editorial__summary:hover {
+  color: color-mix(in srgb, var(--color-accent) 28%, var(--color-text));
+}
+
+.browser-editorial__hero-actions {
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 0.8rem;
+}
+
+.browser-editorial__primary-links {
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.browser-editorial__primary-link {
+  gap: 0.25rem;
+  min-width: 14rem;
+  padding: 0.9rem 1rem;
+  border-top: 1px solid color-mix(in srgb, var(--color-border-subtle) 88%, transparent);
+  transition:
+    transform 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease;
+}
+
+.browser-editorial__primary-link strong,
+.browser-editorial__contact-item strong,
+.browser-editorial__language-item strong,
+.browser-editorial__project-meta strong,
+.browser-editorial__experience-meta strong,
+.browser-editorial__stack-item strong,
+.browser-editorial__aside-block strong,
+.browser-editorial__metric strong {
+  color: var(--color-text);
+  font-size: 1.05rem;
+  line-height: 1.35;
+}
+
+.browser-editorial__aside {
+  gap: 1.6rem;
+  padding-top: 0.9rem;
+}
+
+.browser-editorial__aside-block {
+  gap: 0.85rem;
+  padding-top: 1rem;
+  border-top: 1px solid color-mix(in srgb, var(--color-border-subtle) 80%, transparent);
+}
+
+.browser-editorial__aside-block--compact {
+  gap: 1rem;
+}
+
+.browser-editorial__metric {
+  gap: 0.25rem;
+}
+
+.browser-editorial__section {
+  gap: 1.5rem;
+}
+
+.browser-editorial__section-head {
+  grid-template-columns: 3rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.browser-editorial__index {
+  color: color-mix(in srgb, var(--color-accent) 72%, var(--color-text));
+  font-family: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.browser-editorial__section-title {
+  max-width: 36rem;
+  margin: 0.2rem 0 0;
+  font-family: 'Plus Jakarta Sans', 'Segoe UI', 'Helvetica Neue', sans-serif;
+  font-size: clamp(1.35rem, 2vw, 2rem);
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+}
+
+.browser-editorial__project,
+.browser-editorial__experience,
+.browser-editorial__stack-item,
+.browser-editorial__contact-item,
+.browser-editorial__language-item {
+  gap: 0.55rem;
+}
+
+.browser-editorial__project {
+  grid-template-columns: minmax(11rem, 0.8fr) minmax(15rem, 1fr) minmax(0, 1.45fr);
+  gap: 1.25rem;
+  align-items: start;
+  padding: 1.15rem 0;
+  border-top: 1px solid color-mix(in srgb, var(--color-border-subtle) 72%, transparent);
+}
+
+.browser-editorial__project:first-child,
+.browser-editorial__experience:first-child,
+.browser-editorial__stack-item:first-child,
+.browser-editorial__contact-item:first-child,
+.browser-editorial__language-item:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.browser-editorial__project-meta,
+.browser-editorial__experience-meta {
+  gap: 0.35rem;
+}
+
+.browser-editorial__project-meta span,
+.browser-editorial__experience-meta span,
+.browser-editorial__stack-item span {
+  display: block;
+  color: var(--color-text-muted);
+  font-size: 0.86rem;
+}
+
+.browser-editorial__stack-item span {
+  margin-bottom: 0.35rem;
+}
+
+.browser-editorial__stack-item strong {
+  display: block;
+}
+
+.browser-editorial__project-role,
+.browser-editorial__experience-meta p {
+  margin: 0;
+  color: color-mix(in srgb, var(--color-text) 88%, var(--color-text-muted));
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+
+.browser-editorial__project-role {
+  padding-top: 1.55rem;
+}
+
+.browser-editorial__project-role,
+.browser-editorial__project-summary {
+  justify-self: start;
+  width: 100%;
+}
+
+.browser-editorial__experience-list {
+  gap: 1.75rem;
+}
+
+.browser-editorial__experience {
+  grid-template-columns: minmax(14rem, 0.46fr) minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+  padding-top: 1.2rem;
+  border-top: 1px solid color-mix(in srgb, var(--color-border-subtle) 72%, transparent);
+}
+
+.browser-editorial__experience-body {
+  gap: 1.35rem;
+}
+
+.browser-editorial__experience-body p {
+  line-height: 1.9;
+}
+
+.browser-editorial__experience-points {
+  display: grid;
+  gap: 0.85rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--color-text-muted);
+}
+
+.browser-editorial__experience-points li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: start;
+  line-height: 1.72;
+}
+
+.browser-editorial__experience-points li::before {
+  content: '';
+  width: 0.42rem;
+  height: 0.42rem;
+  margin-top: 0.55rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-accent) 72%, var(--color-text));
+  box-shadow: 0 0 0 0.22rem color-mix(in srgb, var(--color-accent) 12%, transparent);
+}
+
+.browser-editorial__section--capabilities,
+.browser-editorial__section--footer {
+  gap: 1.9rem;
+}
+
+.browser-editorial__capabilities {
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+}
+
+.browser-editorial__skill-columns {
+  width: 55rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.15rem;
+}
+
+.browser-editorial__skill-column {
+  gap: 0.9rem;
+}
+
+.browser-editorial__skill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 4.5rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--color-border-subtle) 78%, transparent);
+  border-radius: 1.15rem;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--color-surface-alt) 74%, transparent), color-mix(in srgb, var(--color-surface) 62%, transparent)),
+    radial-gradient(circle at top left, color-mix(in srgb, var(--color-accent) 12%, transparent), transparent 56%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 14px 28px color-mix(in srgb, var(--color-window-shadow) 10%, transparent);
+  color: var(--color-text);
+  font-size: 1.02rem;
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: center;
+  text-wrap: balance;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.browser-editorial__skill:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--color-accent) 44%, var(--color-border-subtle));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 18px 34px color-mix(in srgb, var(--color-window-shadow) 14%, transparent);
+}
+
+.browser-editorial__skill-column:nth-child(1) .browser-editorial__skill:nth-child(odd),
+.browser-editorial__skill-column:nth-child(2) .browser-editorial__skill:nth-child(even),
+.browser-editorial__skill-column:nth-child(3) .browser-editorial__skill:nth-child(3n + 1) {
+  border-color: color-mix(in srgb, var(--color-accent) 22%, var(--color-border-subtle));
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--color-accent) 10%, var(--color-surface-alt)), color-mix(in srgb, var(--color-surface) 78%, transparent)),
+    radial-gradient(circle at top left, color-mix(in srgb, var(--color-accent) 16%, transparent), transparent 52%);
+}
+
+.browser-editorial__footer-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+  align-items: start;
+}
+
+.browser-editorial__footer-column {
+  gap: 1.7rem;
+}
+
+.browser-editorial__contact-list {
+  gap: 0.9rem;
+}
+
+.browser-editorial__stack-item,
+.browser-editorial__language-item,
+.browser-editorial__contact-item {
+  gap: 0.38rem;
+  padding: 0.8rem 0 0;
+  border-top: 1px solid color-mix(in srgb, var(--color-border-subtle) 72%, transparent);
+}
+
+.browser-editorial__contact-item {
+  transition:
+    transform 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease;
+}
+
+.browser-editorial__contact-item:hover,
+.browser-editorial__primary-link:hover {
+  transform: translateX(0.12rem);
+  border-color: color-mix(in srgb, var(--color-accent) 42%, var(--color-border-subtle));
+}
+
+.browser-editorial__contact-item--resume strong {
+  color: var(--color-accent);
+}
+
+.browser-app__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.9rem;
+  padding: 0 1rem;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 46%, var(--color-border-subtle));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-accent) 16%, transparent);
+  font-weight: 700;
+}
+
+.browser-app--windows .browser-app__chrome {
+  background: color-mix(in srgb, #10244f 28%, var(--color-surface));
+}
+
+.browser-app--macos .browser-app__chrome {
+  background:
+    linear-gradient(180deg, rgba(243, 247, 252, 0.88), rgba(226, 234, 245, 0.92)),
+    radial-gradient(circle at top right, rgba(58, 139, 255, 0.12), transparent 42%);
+  border-bottom-color: rgba(88, 105, 130, 0.22);
+}
+
+.browser-app--macos {
+  background:
+    radial-gradient(circle at 12% 10%, rgba(255, 182, 193, 0.16), transparent 22%),
+    radial-gradient(circle at 85% 12%, rgba(255, 220, 136, 0.18), transparent 26%),
+    radial-gradient(circle at 76% 78%, rgba(126, 182, 255, 0.14), transparent 24%),
+    linear-gradient(180deg, rgba(236, 241, 248, 0.98), rgba(222, 231, 242, 0.96));
+  border-color: rgba(88, 105, 130, 0.22);
+  box-shadow:
+    0 26px 54px rgba(82, 97, 118, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+.browser-app--macos .browser-editorial__name,
+.browser-app--macos .browser-editorial__headline,
+.browser-app--macos .browser-editorial__section-title,
+.browser-app--macos .browser-editorial__project-meta strong,
+.browser-app--macos .browser-editorial__experience-meta strong,
+.browser-app--macos .browser-editorial__stack-item strong,
+.browser-app--macos .browser-editorial__language-item strong,
+.browser-app--macos .browser-editorial__contact-item strong,
+.browser-app--macos .browser-editorial__aside-block strong,
+.browser-app--macos .browser-editorial__metric strong {
+  color: #14253a;
+}
+
+.browser-app--macos .browser-editorial__summary,
+.browser-app--macos .browser-editorial__project-summary,
+.browser-app--macos .browser-editorial__experience-body p,
+.browser-app--macos .browser-editorial__stack-item p,
+.browser-app--macos .browser-editorial__language-item p,
+.browser-app--macos .browser-editorial__aside-block p,
+.browser-app--macos .browser-editorial__capabilities-copy p,
+.browser-app--macos .browser-editorial__experience-points,
+.browser-app--macos .browser-editorial__project-role,
+.browser-app--macos .browser-editorial__experience-meta p,
+.browser-app--macos .browser-editorial__language-item span,
+.browser-app--macos .browser-editorial__skill,
+.browser-app--macos .browser-editorial__primary-link span,
+.browser-app--macos .browser-editorial__contact-item span {
+  color: rgba(20, 37, 58, 0.74);
+}
+
+.browser-app--macos .browser-editorial__eyebrow,
+.browser-app--macos .browser-editorial__section-label,
+.browser-app--macos .browser-editorial__stack-label,
+.browser-app--macos .browser-editorial__meta-label,
+.browser-app--macos .browser-editorial__metric span,
+.browser-app--macos .browser-editorial__primary-link span,
+.browser-app--macos .browser-editorial__contact-item span,
+.browser-app--macos .browser-app__address-domain,
+.browser-app--macos .browser-editorial__index,
+.browser-app--macos .browser-editorial__project-meta span,
+.browser-app--macos .browser-editorial__experience-meta span,
+.browser-app--macos .browser-editorial__stack-item span {
+  color: rgba(20, 37, 58, 0.6);
+}
+
+.browser-app--macos .browser-app__addressbar,
+.browser-app--macos .browser-app__icon-button {
+  background: rgba(250, 252, 255, 0.72);
+  border-color: rgba(88, 105, 130, 0.26);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    0 10px 24px rgba(82, 97, 118, 0.08);
+}
+
+.browser-app--macos .browser-app__cta {
+  background: rgba(58, 139, 255, 0.12);
+  border-color: rgba(58, 139, 255, 0.4);
+  color: #1d4ed8;
+}
+
+.browser-app--macos .browser-app__icon-button {
+  color: #324860;
+}
+
+.browser-app--macos .browser-editorial__hero,
+.browser-app--macos .browser-editorial__aside-block,
+.browser-app--macos .browser-editorial__project,
+.browser-app--macos .browser-editorial__experience,
+.browser-app--macos .browser-editorial__stack-item,
+.browser-app--macos .browser-editorial__language-item,
+.browser-app--macos .browser-editorial__contact-item,
+.browser-app--macos .browser-editorial__primary-link,
+.browser-app--macos .browser-editorial__skill {
+  border-color: rgba(88, 105, 130, 0.18);
+}
+
+.browser-app--linux .browser-app__chrome {
+  background: color-mix(in srgb, #2a1830 40%, var(--color-surface));
+}
+
+@media (max-width: 960px) {
+  .browser-app__toolbar,
+  .browser-editorial__hero,
+  .browser-editorial__hero-body,
+  .browser-editorial__project,
+  .browser-editorial__experience,
+  .browser-editorial__capabilities,
+  .browser-editorial__footer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .browser-app__toolbar,
+  .browser-editorial__hero-actions,
+  .browser-editorial__primary-links {
+    display: grid;
+  }
+
+  .browser-editorial__skill-columns,
+  .browser-editorial__primary-links {
+    grid-template-columns: 1fr;
+  }
+
+  .browser-editorial__section-head {
+    grid-template-columns: 1fr;
+    gap: 0.55rem;
+  }
+
+  .browser-editorial__headline {
+    max-width: none;
+  }
+
+  .browser-editorial__summary {
+    justify-self: start;
+    max-width: 66ch;
+    padding-top: 0;
+  }
+}

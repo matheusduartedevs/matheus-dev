@@ -152,12 +152,12 @@ export const portfolioContent: PortfolioContent = {
     },
     {
       label: 'LinkedIn',
-      value: 'Adicionar link',
+      value: 'linkedin.com/in/matheus-duarte-7bb04b266',
       href: 'https://www.linkedin.com/in/matheus-duarte-7bb04b266',
     },
     {
       label: 'GitHub',
-      value: 'Adicionar link',
+      value: 'github.com/matheusduartedevs',
       href: 'https://github.com/matheusduartedevs',
     },
   ],
