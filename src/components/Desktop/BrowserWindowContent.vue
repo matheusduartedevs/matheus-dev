@@ -26,7 +26,9 @@ const primaryContacts = computed(() =>
   props.content.contacts.filter((contact) => !contact.href.startsWith('#')).slice(0, 2),
 )
 
-const visibleSkills = computed(() => props.content.skills.slice(0, 18))
+const flatSkills = computed<PortfolioSkill[]>(() => props.content.skills.flatMap((section) => section.items))
+
+const visibleSkills = computed(() => flatSkills.value.slice(0, 18))
 
 const skillColumns = computed(() => {
   const columns: PortfolioSkill[][] = [[], [], []]

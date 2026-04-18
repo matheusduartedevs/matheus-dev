@@ -22,6 +22,11 @@ export type PortfolioSkill = {
   value: string
 }
 
+export type PortfolioSkillSection = {
+  title: string
+  items: PortfolioSkill[]
+}
+
 export type PortfolioEducation = {
   institution: string
   program: string
@@ -61,7 +66,7 @@ export type PortfolioContent = {
   summary: string
   desktopIntro: string
   mobileIntro: string
-  skills: PortfolioSkill[]
+  skills: PortfolioSkillSection[]
   metrics: PortfolioMetric[]
   projects: PortfolioProject[]
   experience: PortfolioExperience[]

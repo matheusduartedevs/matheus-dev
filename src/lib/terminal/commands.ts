@@ -28,6 +28,7 @@ const navigate = (
 })
 
 const joinInline = (items: string[]) => items.filter(Boolean).join(' · ')
+const flattenSkills = (content: PortfolioContent) => content.skills.flatMap((section) => section.items)
 
 const getCommandLabel = (command: TerminalCommandDefinition) => {
   const aliases = command.aliases?.slice(0, 2) ?? []
@@ -65,7 +66,7 @@ const getContentSection = (content: PortfolioContent, target: string) => {
   }
 
   if (normalizedTarget === 'skills') {
-    return ['Habilidades:', ...content.skills.map((skill) => `- ${skill.value}`)]
+    return ['Habilidades:', ...flattenSkills(content).map((skill) => `- ${skill.value}`)]
   }
 
   if (normalizedTarget === 'education') {
@@ -131,7 +132,7 @@ const createCommandList = (): TerminalCommandDefinition[] => [
         content.name,
         content.title,
         `Foco: ${content.metrics[0]?.value ?? 'Engenharia front-end'}`,
-        `Stack principal: ${joinInline(content.skills.slice(0, 6).map((skill) => skill.value))}`,
+        `Stack principal: ${joinInline(flattenSkills(content).slice(0, 6).map((skill) => skill.value))}`,
       ]),
   },
   {
@@ -182,7 +183,7 @@ const createCommandList = (): TerminalCommandDefinition[] => [
     description: 'Mostra as principais habilidades técnicas.',
     usage: 'skills',
     execute: ({ content }) =>
-      print(['Habilidades:', ...content.skills.map((skill) => `- ${skill.value}`)]),
+      print(['Habilidades:', ...flattenSkills(content).map((skill) => `- ${skill.value}`)]),
   },
   {
     name: 'education',

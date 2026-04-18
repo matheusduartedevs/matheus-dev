@@ -9,7 +9,7 @@ export const portfolioContent: PortfolioContent = {
   desktopIntro:
     'A experiência desktop evolui para uma metáfora de sistema operacional, onde navegador, terminal e explorador de arquivos funcionam como diferentes formas de navegar pela minha trajetória, projetos e currículo.',
   mobileIntro:
-    'No mobile, a experiência é direta e focada no recrutador, com uma visão clara da minha experiência, projetos, stack técnica e formas de contato.',
+    'Acesse esse portfólio em um desktop para uma experiência completa :)',
   metrics: [
     { label: 'Foco', value: 'Checkout, vendas e confiabilidade de produto' },
     { label: 'Força', value: 'Performance, SEO e qualidade de código' },
@@ -72,30 +72,45 @@ export const portfolioContent: PortfolioContent = {
     },
   ],
   skills: [
-    { value: 'JavaScript (ES6+)' },
-    { value: 'TypeScript' },
-    { value: 'Vue.js' },
-    { value: 'Nuxt.js' },
-    { value: 'React' },
-    { value: 'Next.js' },
-    { value: 'Node.js' },
-    { value: 'Express' },
-    { value: 'NestJS' },
-    { value: 'REST APIs' },
-    { value: 'Prisma ORM' },
-    { value: 'SQL' },
-    { value: 'MongoDB' },
-    { value: 'SEO Técnico' },
-    { value: 'Web Performance' },
-    { value: 'Testes A/B' },
-    { value: 'Microfrontends' },
-    { value: 'Monólito Modular' },
-    { value: 'Integração com microservices' },
-    { value: 'Git' },
-    { value: 'GitHub Actions (CI/CD)' },
-    { value: 'Google Cloud Platform' },
-    { value: 'Scrum' },
-    { value: 'Figma (handoff com design)' },
+    {
+      title: 'Base front-end',
+      items: [
+        { value: 'JavaScript (ES6+)' },
+        { value: 'TypeScript' },
+        { value: 'SEO Técnico' },
+        { value: 'Web Performance' },
+        { value: 'Testes A/B' },
+      ],
+    },
+    {
+      title: 'Frameworks e ecossistema',
+      items: [{ value: 'Vue.js' }, { value: 'Nuxt.js' }, { value: 'React' }, { value: 'Next.js' }],
+    },
+    {
+      title: 'Back-end e dados',
+      items: [
+        { value: 'Node.js' },
+        { value: 'Express' },
+        { value: 'NestJS' },
+        { value: 'REST APIs' },
+        { value: 'Prisma ORM' },
+        { value: 'SQL' },
+        { value: 'MongoDB' },
+      ],
+    },
+    {
+      title: 'Arquitetura e entrega',
+      items: [
+        { value: 'Microfrontends' },
+        { value: 'Monólito Modular' },
+        { value: 'Integração com microservices' },
+        { value: 'Git' },
+        { value: 'GitHub Actions (CI/CD)' },
+        { value: 'Google Cloud Platform' },
+        { value: 'Scrum' },
+        { value: 'Figma (handoff com design)' },
+      ],
+    },
   ],
   education: [
     {

@@ -1,18 +1,27 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+
 import { getResumeOpenHref } from '@/lib/resume'
 import type { PortfolioContent } from '@/types/portfolio'
 
-defineProps<{
+const props = defineProps<{
   content: PortfolioContent
 }>()
+
+const groupedSkills = computed(() => {
+  return props.content.skills.map((section) => ({
+    title: section.title,
+    items: section.items.map((item) => item.value),
+  }))
+})
 </script>
 
 <template>
   <section class="mobile-page">
     <header class="mobile-hero">
       <div class="mobile-hero__header">
-        <p class="mobile-eyebrow">Portfolio overview</p>
-        <span class="mobile-hero__status">Frontend engineer</span>
+        <p class="mobile-eyebrow">Portfólio</p>
+        <span class="mobile-hero__status">Engenheiro front-end</span>
       </div>
 
       <div class="mobile-hero__content">
@@ -54,15 +63,15 @@ defineProps<{
 
     <section class="mobile-section">
       <div class="mobile-section__intro">
-        <h2 class="mobile-section-title">Overview</h2>
+        <h2 class="mobile-section-title">Visão geral</h2>
         <p class="mobile-body">{{ content.summary }}</p>
       </div>
     </section>
 
     <section class="mobile-section">
       <div class="mobile-section__intro">
-        <h2 class="mobile-section-title">Projects</h2>
-        <p class="mobile-body">Projetos recentes com foco em impacto, contexto técnico e produto.</p>
+        <h2 class="mobile-section-title">Projetos</h2>
+        <p class="mobile-body">Projetos com contexto, impacto e responsabilidade técnica.</p>
       </div>
 
       <div class="mobile-card-list">
@@ -79,8 +88,8 @@ defineProps<{
 
     <section class="mobile-section">
       <div class="mobile-section__intro">
-        <h2 class="mobile-section-title">Experience</h2>
-        <p class="mobile-body">Trajetória em produto digital, performance e fluxos críticos.</p>
+        <h2 class="mobile-section-title">Experiência</h2>
+        <p class="mobile-body">Trajetória orientada por produto, qualidade e fluxos críticos.</p>
       </div>
 
       <div class="mobile-card-list">
@@ -104,21 +113,28 @@ defineProps<{
 
     <section class="mobile-section">
       <div class="mobile-section__intro">
-        <h2 class="mobile-section-title">Skills</h2>
-        <p class="mobile-body">Stack principal e áreas onde a execução tende a ser mais forte.</p>
+        <h2 class="mobile-section-title">Habilidades</h2>
+        <p class="mobile-body">Stack principal, ferramentas e repertório técnico em produção.</p>
       </div>
 
-      <div class="mobile-tag-grid">
-        <span v-for="skill in content.skills" :key="skill.value" class="mobile-tag">
-          {{ skill.value }}
-        </span>
+      <div class="mobile-skill-sections">
+        <article v-for="section in groupedSkills" :key="section.title" class="mobile-skill-card">
+          <h3 class="mobile-card-title">{{ section.title }}</h3>
+
+          <div class="mobile-tag-grid mobile-tag-grid--skills">
+            <span v-for="item in section.items" :key="item" class="mobile-tag">
+              {{ item }}
+            </span>
+          </div>
+        </article>
       </div>
     </section>
 
     <section class="mobile-section mobile-section--split">
       <article class="mobile-subsection">
         <div class="mobile-section__intro">
-          <h2 class="mobile-section-title">Education</h2>
+          <h2 class="mobile-section-title">Formação</h2>
+          <p class="mobile-body">Formação acadêmica e base técnica construída ao longo da graduação.</p>
         </div>
 
         <div class="mobile-card-list">
@@ -139,7 +155,8 @@ defineProps<{
 
       <article class="mobile-subsection">
         <div class="mobile-section__intro">
-          <h2 class="mobile-section-title">Languages</h2>
+          <h2 class="mobile-section-title">Idiomas</h2>
+          <p class="mobile-body">Idiomas e nível de proficiência.</p>
         </div>
 
         <div class="mobile-card-list">
@@ -156,8 +173,8 @@ defineProps<{
 
     <section class="mobile-section">
       <div class="mobile-section__intro">
-        <h2 class="mobile-section-title">Certifications</h2>
-        <p class="mobile-body">Formação complementar e credenciais verificáveis.</p>
+        <h2 class="mobile-section-title">Certificações</h2>
+        <p class="mobile-body">Certificações complementares em idioma, segurança e desenvolvimento.</p>
       </div>
 
       <div class="mobile-card-list">
@@ -174,8 +191,8 @@ defineProps<{
 
     <section class="mobile-section">
       <div class="mobile-section__intro">
-        <h2 class="mobile-section-title">Contact</h2>
-        <p class="mobile-body">Canais para conversa, portfólio público e currículo completo.</p>
+        <h2 class="mobile-section-title">Contato</h2>
+        <p class="mobile-body">Vamos nos conectar!</p>
       </div>
 
       <div class="mobile-contact-list">
@@ -197,7 +214,7 @@ defineProps<{
           target="_blank"
           rel="noreferrer"
         >
-          <span>Resume</span>
+          <span>Currículo</span>
           <strong>{{ content.resume.label }}</strong>
         </a>
       </div>
