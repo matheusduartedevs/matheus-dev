@@ -5,7 +5,7 @@ export const portfolioContent: PortfolioContent = {
   title:
     'Desenvolvedor Front-end focado em produtos digitais, performance e fluxos críticos de conversão',
   summary:
-    'Desenvolvedor Front-end com experiência em produtos digitais de grande escala, atuando em fluxos críticos de vendas e checkout com foco em performance, SEO, segurança e confiabilidade. Experiência sólida com JavaScript, TypeScript, Vue.js, Nuxt (2, 3 e 4), React e integrações com APIs em ambientes Node.js.',
+    'Desenvolvedor Front-end com experiência em produtos digitais de grande escala, atuando em fluxos críticos de vendas e checkout com foco em performance, SEO, segurança e confiabilidade. Experiência sólida com JavaScript, TypeScript, Vue.js, Nuxt, React e integrações com APIs em ambientes Node.js.',
   desktopIntro:
     'A experiência desktop evolui para uma metáfora de sistema operacional, onde navegador, terminal e explorador de arquivos funcionam como diferentes formas de navegar pela minha trajetória, projetos e currículo.',
   mobileIntro:
@@ -91,9 +91,7 @@ export const portfolioContent: PortfolioContent = {
       items: [
         { value: 'Node.js' },
         { value: 'Express' },
-        { value: 'NestJS' },
         { value: 'REST APIs' },
-        { value: 'Prisma ORM' },
         { value: 'SQL' },
         { value: 'MongoDB' },
       ],
@@ -104,11 +102,8 @@ export const portfolioContent: PortfolioContent = {
         { value: 'Microfrontends' },
         { value: 'Monólito Modular' },
         { value: 'Integração com microservices' },
-        { value: 'Git' },
         { value: 'GitHub Actions (CI/CD)' },
         { value: 'Google Cloud Platform' },
-        { value: 'Scrum' },
-        { value: 'Figma (handoff com design)' },
       ],
     },
   ],
