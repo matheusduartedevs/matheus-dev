@@ -1,0 +1,206 @@
+.desktop-window {
+  position: absolute;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  border: 1px solid var(--color-border-strong);
+  border-radius: calc(var(--radius-window) - 0.2rem);
+  background: color-mix(in srgb, var(--color-surface) 94%, transparent);
+  box-shadow: 0 22px 48px color-mix(in srgb, var(--color-window-shadow) 92%, transparent);
+  overflow: hidden;
+  backdrop-filter: blur(18px);
+}
+
+.desktop-window.is-fullscreen {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+}
+
+.desktop-window.theme-windows.is-fullscreen {
+  inset: 0 0 3.4rem 0;
+  width: auto;
+  height: auto;
+}
+
+.desktop-window.theme-linux.is-fullscreen {
+  inset: 2.4rem 0 0 4.8rem;
+  width: auto;
+  height: auto;
+}
+
+.desktop-window.is-focused {
+  border-color: color-mix(in srgb, var(--color-accent) 52%, var(--color-border-strong));
+}
+
+.desktop-window__titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  background: var(--color-window-titlebar);
+  border-bottom: 1px solid var(--color-border-subtle);
+  cursor: default;
+}
+
+.desktop-window__titlebar.theme-windows,
+.desktop-window__titlebar.theme-linux {
+  padding-right: 0;
+}
+
+.desktop-window__title {
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.desktop-window__titlebar.theme-macos .desktop-window__title {
+  color: #223145;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-transform: none;
+}
+
+.window-controls {
+  display: inline-flex;
+  gap: 0.45rem;
+}
+
+.window-controls--windows,
+.window-controls--linux {
+  gap: 0;
+  margin-left: auto;
+}
+
+.window-controls__macos-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 0.82rem;
+  height: 0.82rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.window-controls__macos-action--close {
+  background: #ff5f57;
+}
+
+.window-controls__macos-action--minimize {
+  background: #febc2e;
+}
+
+.window-controls__macos-action--maximize {
+  background: #28c840;
+}
+
+.window-controls__system-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.window-controls__system-action span {
+  display: block;
+}
+
+.window-controls__system-action--minimize span {
+  width: 0.8rem;
+  border-top: 1.5px solid currentColor;
+}
+
+.window-controls__system-action--maximize span {
+  width: 0.75rem;
+  height: 0.62rem;
+  border: 1.5px solid currentColor;
+}
+
+.window-controls__system-action--close span {
+  position: relative;
+  width: 0.82rem;
+  height: 0.82rem;
+}
+
+.window-controls__system-action--close span::before,
+.window-controls__system-action--close span::after {
+  position: absolute;
+  top: 0.38rem;
+  left: 0;
+  width: 0.82rem;
+  border-top: 1.5px solid currentColor;
+  content: '';
+}
+
+.window-controls__system-action--close span::before {
+  transform: rotate(45deg);
+}
+
+.window-controls__system-action--close span::after {
+  transform: rotate(-45deg);
+}
+
+.window-controls--windows .window-controls__system-action:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.window-controls--windows .window-controls__system-action--close:hover {
+  background: #e81123;
+  color: #fff;
+}
+
+.window-controls--linux .window-controls__system-action {
+  width: 1.9rem;
+  height: 1.9rem;
+  margin-right: 0.35rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  background: rgba(33, 33, 33, 0.72);
+}
+
+.window-controls--linux .window-controls__system-action:hover {
+  background: rgba(49, 49, 49, 0.88);
+}
+
+.window-controls--linux .window-controls__system-action span {
+  color: #f6f4f1;
+}
+
+.window-controls--linux .window-controls__system-action--close span::before,
+.window-controls--linux .window-controls__system-action--close span::after {
+  border-color: #f6f4f1;
+}
+
+.window-controls--linux .window-controls__system-action--close {
+  background: rgba(73, 31, 32, 0.92);
+}
+
+.window-controls--linux .window-controls__system-action--close:hover {
+  background: #c24c40;
+}
+
+.desktop-window__body {
+  display: grid;
+  min-height: 0;
+  padding: 1.1rem 1.2rem;
+  overflow: auto;
+}
+
+.desktop-window__body--flush {
+  padding: 0;
+  overflow: hidden;
+}

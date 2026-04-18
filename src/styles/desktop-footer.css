@@ -1,0 +1,284 @@
+.desktop-footer {
+  position: absolute;
+  inset: 0;
+  z-index: 200;
+  pointer-events: none;
+}
+
+.desktop-app-icon {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.desktop-app-icon--sm {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.desktop-app-icon--md {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.desktop-app-icon--lg {
+  width: 2.9rem;
+  height: 2.9rem;
+}
+
+.desktop-app-icon__image {
+  display: none;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+[data-os-theme='windows'] .desktop-app-icon__image--windows,
+[data-os-theme='macos'] .desktop-app-icon__image--macos,
+[data-os-theme='linux'] .desktop-app-icon__image--linux {
+  display: block;
+}
+
+.desktop-footer__windows-taskbar {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  height: 3.4rem;
+  padding: 0 0.9rem;
+  background: rgba(15, 29, 49, 0.82);
+  backdrop-filter: blur(12px);
+}
+
+.desktop-footer__windows-start {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.3rem;
+  padding: 0;
+  border: 0;
+  border-radius: 0.85rem;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.desktop-footer__windows-start span {
+  width: 1rem;
+  height: 1rem;
+  background:
+    linear-gradient(90deg, #79d1ff 48%, transparent 48%, transparent 52%, #79d1ff 52%),
+    linear-gradient(180deg, #79d1ff 48%, transparent 48%, transparent 52%, #79d1ff 52%);
+}
+
+.desktop-footer__windows-apps {
+  pointer-events: auto;
+  display: inline-flex;
+  gap: 0.4rem;
+  align-items: center;
+  min-width: 0;
+}
+
+.desktop-footer__app-button {
+  position: relative;
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    background-color 160ms ease,
+    opacity 160ms ease;
+}
+
+.desktop-footer__app-button:hover {
+  transform: translateY(-1px);
+}
+
+.desktop-footer__app-button.is-minimized {
+  opacity: 0.72;
+}
+
+.desktop-footer__app-button--windows {
+  gap: 0.6rem;
+  min-width: 7.6rem;
+  height: 2.55rem;
+  padding: 0 0.8rem;
+  border-radius: 0.9rem;
+  color: #f4f9ff;
+}
+
+.desktop-footer__app-button--windows:hover,
+.desktop-footer__app-button--windows.is-open {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.desktop-footer__app-button--windows.is-focused {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.desktop-footer__app-button--windows::after {
+  position: absolute;
+  bottom: 0.18rem;
+  left: 50%;
+  width: 1.25rem;
+  height: 0.18rem;
+  border-radius: 999px;
+  background: #79d1ff;
+  transform: translateX(-50%) scaleX(0);
+  transform-origin: center;
+  transition: transform 160ms ease;
+  content: '';
+}
+
+.desktop-footer__app-button--windows.is-open::after,
+.desktop-footer__app-button--windows.is-focused::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
+.desktop-footer__windows-label {
+  overflow: hidden;
+  max-width: 4.3rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.desktop-footer__windows-tray {
+  margin-left: auto;
+  display: inline-flex;
+  gap: 0.35rem;
+  align-items: center;
+  justify-content: center;
+  width: 5rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.desktop-footer__windows-tray span {
+  width: 0.3rem;
+  height: 0.3rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.desktop-footer__macos-dock {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 1.2rem;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateX(-50%);
+  backdrop-filter: blur(18px);
+}
+
+.desktop-footer__app-button--macos {
+  width: 3.4rem;
+  height: 3.4rem;
+  border-radius: 1rem;
+}
+
+.desktop-footer__app-button--macos::before {
+  position: absolute;
+  inset: 0;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.2);
+  opacity: 0;
+  transition: opacity 160ms ease;
+  content: '';
+}
+
+.desktop-footer__app-button--macos:hover::before,
+.desktop-footer__app-button--macos.is-open::before,
+.desktop-footer__app-button--macos.is-focused::before {
+  opacity: 1;
+}
+
+.desktop-footer__app-button--macos::after {
+  position: absolute;
+  bottom: -0.35rem;
+  left: 50%;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.86);
+  transform: translateX(-50%) scale(0);
+  transition: transform 160ms ease;
+  content: '';
+}
+
+.desktop-footer__app-button--macos.is-open::after,
+.desktop-footer__app-button--macos.is-focused::after {
+  transform: translateX(-50%) scale(1);
+}
+
+.desktop-footer__linux-topbar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 2.4rem;
+  padding: 0 1rem;
+  background: rgba(24, 20, 28, 0.78);
+}
+
+.desktop-footer__linux-topbar-pill {
+  width: 1.8rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.84);
+}
+
+.desktop-footer__linux-topbar-dots {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.62);
+}
+
+.desktop-footer__linux-dock {
+  position: absolute;
+  top: 3rem;
+  bottom: 1rem;
+  left: 0.75rem;
+  display: grid;
+  gap: 0.6rem;
+  align-content: start;
+  width: 3.3rem;
+  padding: 0.6rem 0.35rem;
+  border-radius: 1.4rem;
+  background: rgba(28, 23, 33, 0.76);
+  backdrop-filter: blur(12px);
+}
+
+.desktop-footer__app-button--linux {
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 0.85rem;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.desktop-footer__app-button--linux:hover,
+.desktop-footer__app-button--linux.is-open {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.desktop-footer__app-button--linux.is-focused {
+  background: rgba(233, 84, 32, 0.32);
+}

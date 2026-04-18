@@ -1,0 +1,108 @@
+.app-shell {
+  min-height: 100vh;
+  padding: clamp(1rem, 2vw, 1.5rem);
+  background:
+    radial-gradient(circle at top left, var(--color-bg-highlight), transparent 35%),
+    linear-gradient(180deg, var(--color-bg), var(--color-bg-alt));
+}
+
+.desktop-shell {
+  max-width: 100rem;
+  height: 100%;
+  margin: 0 auto;
+}
+
+.desktop-canvas {
+  position: relative;
+  min-height: calc(100vh - 2rem);
+  border: 1px solid var(--color-border-strong);
+  border-radius: calc(var(--radius-window) + 0.5rem);
+  box-shadow: var(--shadow-window);
+  overflow: hidden;
+}
+
+.desktop-surface {
+  position: relative;
+  min-height: calc(100vh - 2rem);
+  isolation: isolate;
+}
+
+.desktop-surface.theme-windows {
+  background:
+    linear-gradient(128deg, rgba(255, 255, 255, 0.1), transparent 38%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 24%),
+    linear-gradient(145deg, #1694d7 0%, #1fa8e8 36%, #0e6fd7 72%, #0c49bf 100%);
+}
+
+.desktop-surface.theme-windows::before,
+.desktop-surface.theme-windows::after {
+  position: absolute;
+  inset: 12% 18% 18% 56%;
+  background: linear-gradient(90deg, rgba(115, 228, 255, 0.34), rgba(115, 228, 255, 0.08));
+  box-shadow: 0 0 32px rgba(115, 228, 255, 0.16);
+  content: '';
+}
+
+.desktop-surface.theme-windows::after {
+  inset: 12% 44% 18% 30%;
+  background: linear-gradient(90deg, rgba(115, 228, 255, 0.24), rgba(115, 228, 255, 0.06));
+}
+
+.desktop-surface.theme-macos {
+  background:
+    radial-gradient(circle at 80% 20%, rgba(255, 210, 103, 0.72), transparent 18%),
+    radial-gradient(circle at 18% 18%, rgba(255, 115, 87, 0.92), transparent 28%),
+    linear-gradient(165deg, #3f75b6 0%, #5aa3e3 20%, #f3f7ff 34%, #f9c267 54%, #f86e5a 76%, #9a4d94 100%);
+}
+
+.desktop-surface.theme-linux {
+  background:
+    linear-gradient(160deg, rgba(0, 0, 0, 0.08), transparent 22%),
+    linear-gradient(146deg, #3b0f3a 0%, #5d174d 38%, #7f254f 64%, #a53a58 100%);
+}
+
+.desktop-surface.theme-linux::before,
+.desktop-surface.theme-linux::after {
+  position: absolute;
+  content: '';
+  inset: auto auto -12% 60%;
+  width: 44rem;
+  height: 44rem;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.06), transparent 72%);
+  transform: rotate(22deg);
+}
+
+.desktop-surface.theme-linux::after {
+  inset: -20% auto auto -12%;
+  width: 36rem;
+  height: 18rem;
+  transform: rotate(-16deg);
+}
+
+@media (max-width: 960px) {
+  body {
+    overflow-y: auto;
+  }
+
+  .app-shell {
+    --shell-padding: 1rem;
+  }
+}
+
+@media (min-width: 961px) {
+  body {
+    overflow: hidden;
+  }
+
+  .app-shell {
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .desktop-canvas,
+  .desktop-surface {
+    height: 100%;
+    min-height: 0;
+  }
+}
