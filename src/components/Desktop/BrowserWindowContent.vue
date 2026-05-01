@@ -2,7 +2,7 @@
 import { computed, nextTick, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 
-import { getResumeDownloadHref, getResumeOpenHref } from '@/lib/resume'
+import { getResumeDownloadHref, getResumeOpenHref, getResumeViewerHref } from '@/lib/resume'
 import { useDesktopStore } from '@/stores/desktop'
 import type { PortfolioContent, PortfolioSkill } from '@/types/portfolio'
 import type { OsTheme } from '@/types/theme'
@@ -362,7 +362,7 @@ watch(
           <iframe
             :key="resumeFrameKey"
             class="browser-resume__viewer"
-            :src="`${content.resume.publicPath}#toolbar=0&navpanes=0&scrollbar=1`"
+            :src="getResumeViewerHref(content.resume)"
             :title="content.resume.label"
           ></iframe>
         </div>
