@@ -1,7 +1,13 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 
-import type { BrowserPage, DesktopAppDefinition, DesktopAppId, DesktopWindow } from '@/types/desktop'
+import type {
+  BrowserPage,
+  DesktopAppDefinition,
+  DesktopAppId,
+  DesktopWindow,
+  DesktopWindowPosition,
+} from '@/types/desktop'
 import browserLinuxIcon from '@/assets/icons/browser-linux.svg'
 import browserMacosIcon from '@/assets/icons/browser-macos.svg'
 import browserWindowsIcon from '@/assets/icons/browser-windows.svg'
@@ -229,6 +235,17 @@ export const useDesktopStore = defineStore('desktop', () => {
     focusWindow(appId)
   }
 
+  const moveWindow = (appId: DesktopAppId, position: DesktopWindowPosition) => {
+    const window = getWindow(appId)
+
+    if (!window || !window.isOpen || window.windowMode === 'fullscreen') {
+      return
+    }
+
+    window.x = position.x
+    window.y = position.y
+  }
+
   const closeWindow = (appId: DesktopAppId) => {
     const window = getWindow(appId)
 
@@ -262,6 +279,7 @@ export const useDesktopStore = defineStore('desktop', () => {
     focusWindow,
     minimizeWindow,
     toggleWindowMode,
+    moveWindow,
     closeWindow,
   }
 })
