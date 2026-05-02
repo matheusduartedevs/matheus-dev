@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://matheusduartedevs.github.io/matheus-dev/sitemap.xml
