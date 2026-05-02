@@ -6,6 +6,7 @@ import type {
   DesktopAppDefinition,
   DesktopAppId,
   DesktopWindow,
+  DesktopWindowBounds,
   DesktopWindowPosition,
 } from '@/types/desktop'
 import browserLinuxIcon from '@/assets/icons/browser-linux.svg'
@@ -246,6 +247,19 @@ export const useDesktopStore = defineStore('desktop', () => {
     window.y = position.y
   }
 
+  const resizeWindow = (appId: DesktopAppId, bounds: DesktopWindowBounds) => {
+    const window = getWindow(appId)
+
+    if (!window || !window.isOpen || window.windowMode === 'fullscreen') {
+      return
+    }
+
+    window.x = bounds.x
+    window.y = bounds.y
+    window.width = bounds.width
+    window.height = bounds.height
+  }
+
   const closeWindow = (appId: DesktopAppId) => {
     const window = getWindow(appId)
 
@@ -280,6 +294,7 @@ export const useDesktopStore = defineStore('desktop', () => {
     minimizeWindow,
     toggleWindowMode,
     moveWindow,
+    resizeWindow,
     closeWindow,
   }
 })

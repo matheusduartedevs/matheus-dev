@@ -50,9 +50,71 @@
 }
 
 .desktop-window.is-dragging,
+.desktop-window.is-resizing,
+.desktop-window.is-dragging .desktop-window__titlebar {
+  user-select: none;
+}
+
+.desktop-window.is-dragging,
 .desktop-window.is-dragging .desktop-window__titlebar {
   cursor: grabbing;
-  user-select: none;
+}
+
+.desktop-window.is-resizing-top-left,
+.desktop-window.is-resizing-bottom-right,
+.desktop-window__resize-handle--top-left,
+.desktop-window__resize-handle--bottom-right {
+  cursor: nwse-resize;
+}
+
+.desktop-window.is-resizing-top-right,
+.desktop-window.is-resizing-bottom-left,
+.desktop-window__resize-handle--top-right,
+.desktop-window__resize-handle--bottom-left {
+  cursor: nesw-resize;
+}
+
+.desktop-window__resize-handle {
+  position: absolute;
+  z-index: 2;
+  width: 1.2rem;
+  height: 1.2rem;
+  touch-action: none;
+}
+
+.desktop-window__resize-handle--top-left {
+  top: 0;
+  left: 0;
+  width: 0.65rem;
+  height: 0.65rem;
+}
+
+.desktop-window__resize-handle--top-right {
+  top: 0;
+  right: 0;
+  width: 0.65rem;
+  height: 0.65rem;
+}
+
+.desktop-window__resize-handle--bottom-left {
+  bottom: 0;
+  left: 0;
+}
+
+.desktop-window__resize-handle--bottom-right {
+  right: 0;
+  bottom: 0;
+}
+
+.desktop-window__resize-handle--bottom-right::before {
+  position: absolute;
+  right: 0.28rem;
+  bottom: 0.28rem;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-right: 2px solid color-mix(in srgb, var(--color-text-muted) 68%, transparent);
+  border-bottom: 2px solid color-mix(in srgb, var(--color-text-muted) 68%, transparent);
+  content: '';
 }
 
 .desktop-window__titlebar.theme-windows,

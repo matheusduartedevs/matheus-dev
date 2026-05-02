@@ -10,6 +10,11 @@ export type DesktopWindowPosition = {
   x: number
   y: number
 }
+export type DesktopWindowSize = {
+  width: number
+  height: number
+}
+export type DesktopWindowBounds = DesktopWindowPosition & DesktopWindowSize
 
 export type DesktopWindow = {
   id: DesktopAppId

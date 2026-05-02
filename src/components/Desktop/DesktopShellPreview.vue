@@ -104,6 +104,7 @@ const handleDesktopActivation = () => {
           @minimize="desktopStore.minimizeWindow('browser')"
           @maximize="desktopStore.toggleWindowMode('browser')"
           @move="desktopStore.moveWindow('browser', $event)"
+          @resize="desktopStore.resizeWindow('browser', $event)"
           @close="desktopStore.closeWindow('browser')"
         >
           <BrowserWindowContent :content="content" :theme="effectiveTheme" />
@@ -125,6 +126,7 @@ const handleDesktopActivation = () => {
           @minimize="desktopStore.minimizeWindow('terminal')"
           @maximize="desktopStore.toggleWindowMode('terminal')"
           @move="desktopStore.moveWindow('terminal', $event)"
+          @resize="desktopStore.resizeWindow('terminal', $event)"
           @close="desktopStore.closeWindow('terminal')"
         >
           <TerminalWindowContent :content="content" :theme="effectiveTheme" />
@@ -145,6 +147,7 @@ const handleDesktopActivation = () => {
           @minimize="desktopStore.minimizeWindow('files')"
           @maximize="desktopStore.toggleWindowMode('files')"
           @move="desktopStore.moveWindow('files', $event)"
+          @resize="desktopStore.resizeWindow('files', $event)"
           @close="desktopStore.closeWindow('files')"
         >
           <FileWindowContent :content="content" :theme="effectiveTheme" />
