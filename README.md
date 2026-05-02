@@ -7,9 +7,13 @@
 
 A proposta não é reproduzir Windows, macOS ou Linux com fidelidade literal. O objetivo é aplicar referências visuais e comportamentais desses sistemas em uma arquitetura única, coesa e reaproveitável, transformando a navegação do portfólio em uma experiência mais autoral sem comprometer a clareza do conteúdo.
 
+| Windows | MacOS | Linux | 
+| :--: | :--: | :--: |
+| <img width="1920" height="963" alt="Captura de Tela 2026-05-02 às 17 26 38" src="https://github.com/user-attachments/assets/edd48618-0429-4bde-b5d9-27e4e81752c2" /> | <img width="1920" height="963" alt="Captura de Tela 2026-05-02 às 17 28 54" src="https://github.com/user-attachments/assets/95e73380-0a54-438c-8876-0d41db9a1867" /> | <img width="1920" height="963" alt="Captura de Tela 2026-05-02 às 17 27 00" src="https://github.com/user-attachments/assets/be22d117-02c4-4615-8556-c06411721c76" /> |
+
 ## URL
 
-[portfolio-os.dev](https://portfolio-os.dev)
+[[portfolio-os.dev](https://portfolio-os.dev)](https://matheusduartedevs.github.io/matheus-dev/)
 
 ## O que o projeto é
 
