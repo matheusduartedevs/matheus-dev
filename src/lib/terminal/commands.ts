@@ -5,10 +5,13 @@ import type {
   TerminalCommandDefinition,
   TerminalCommandResult,
   TerminalEntryTone,
+  TerminalLine,
+  TerminalLineTone,
 } from '@/types/terminal'
+import type { PortfolioTextLine } from '@/types/portfolio'
 
 const print = (
-  lines: string[],
+  lines: TerminalLine[],
   tone: Exclude<TerminalEntryTone, 'input'> = 'output',
 ): TerminalCommandResult => ({
   type: 'print',
@@ -18,7 +21,7 @@ const print = (
 
 const navigate = (
   page: 'resume',
-  lines: string[],
+  lines: TerminalLine[],
   tone: Exclude<TerminalEntryTone, 'input'> = 'system',
 ): TerminalCommandResult => ({
   type: 'navigate',
@@ -28,18 +31,80 @@ const navigate = (
 })
 
 const joinInline = (items: string[]) => items.filter(Boolean).join(' · ')
-const flattenSkills = (content: PortfolioContent) => content.skills.flatMap((section) => section.items)
+const flattenSkills = (content: PortfolioContent) =>
+  content.skills.flatMap((section) => section.items)
+const line = (text: string, tone?: TerminalLineTone): TerminalLine => ({ text, tone })
 
 const getCommandLabel = (command: TerminalCommandDefinition) => {
   const aliases = command.aliases?.slice(0, 2) ?? []
   return aliases.length ? `${command.name} (${aliases.join(', ')})` : command.name
 }
 
+const getVisibleCommands = (commands: TerminalCommandDefinition[]) =>
+  commands.filter((command) => !command.hidden)
+
+const getCommandTriggers = (command: TerminalCommandDefinition) => [
+  command.name,
+  ...(command.aliases ?? []),
+]
+
+const normalizeCommandInput = (rawInput: string) =>
+  rawInput.trim().toLowerCase().replace(/^\//, '').replace(/\s+/g, ' ')
+
+const getCommandMatch = (command: TerminalCommandDefinition, normalizedInput: string) => {
+  return getCommandTriggers(command).find((trigger) => {
+    const normalizedTrigger = normalizeCommandInput(trigger)
+    return (
+      normalizedInput === normalizedTrigger || normalizedInput.startsWith(`${normalizedTrigger} `)
+    )
+  })
+}
+
+const mapPortfolioLine = (portfolioLine: PortfolioTextLine): TerminalLine =>
+  typeof portfolioLine === 'string' ? portfolioLine : line(portfolioLine.text, portfolioLine.tone)
+
+const getAboutLines = (content: PortfolioContent): TerminalLine[] => {
+  const sectionLines = content.about.sections.flatMap((section) => [
+    '',
+    line(section.title, 'heading'),
+    ...section.lines.map(mapPortfolioLine),
+  ])
+
+  return [
+    line(`Sobre ${content.name}`, 'heading'),
+    content.title,
+    content.summary,
+    ...sectionLines,
+    '',
+    line(content.about.cta, 'muted'),
+  ]
+}
+
+const getProjectLines = (content: PortfolioContent): TerminalLine[] =>
+  content.projects
+    .flatMap((project) => [
+      line(project.name, 'heading'),
+      line(`${project.year} • ${project.role}`, 'muted'),
+      project.summary,
+      ...project.highlights.map((highlight) => `• ${highlight}`),
+      '',
+    ])
+    .slice(0, -1)
+
+const getSkillLines = (content: PortfolioContent): TerminalLine[] =>
+  content.skills
+    .flatMap((section) => [
+      line(section.title, 'heading'),
+      ...section.items.map((skill) => `• ${skill.value}`),
+      '',
+    ])
+    .slice(0, -1)
+
 const getContentSection = (content: PortfolioContent, target: string) => {
   const normalizedTarget = target.toLowerCase()
 
   if (normalizedTarget === 'about') {
-    return [content.name, content.title, content.summary]
+    return getAboutLines(content)
   }
 
   if (normalizedTarget === 'experience') {
@@ -55,18 +120,11 @@ const getContentSection = (content: PortfolioContent, target: string) => {
   }
 
   if (normalizedTarget === 'projects') {
-    return content.projects
-      .flatMap((project) => [
-        `${project.name} (${project.year})`,
-        `${project.role}`,
-        `${project.summary}`,
-        '',
-      ])
-      .slice(0, -1)
+    return getProjectLines(content)
   }
 
   if (normalizedTarget === 'skills') {
-    return ['Habilidades:', ...flattenSkills(content).map((skill) => `- ${skill.value}`)]
+    return getSkillLines(content)
   }
 
   if (normalizedTarget === 'education') {
@@ -117,7 +175,9 @@ const createCommandList = (): TerminalCommandDefinition[] => [
       print(
         [
           'Comandos disponíveis:',
-          ...commands.map((command) => `${getCommandLabel(command)} - ${command.description}`),
+          ...getVisibleCommands(commands).map(
+            (command) => `${getCommandLabel(command)} - ${command.description}`,
+          ),
         ],
         'system',
       ),
@@ -132,32 +192,26 @@ const createCommandList = (): TerminalCommandDefinition[] => [
         content.name,
         content.title,
         `Foco: ${content.metrics[0]?.value ?? 'Engenharia front-end'}`,
-        `Stack principal: ${joinInline(flattenSkills(content).slice(0, 6).map((skill) => skill.value))}`,
+        `Stack principal: ${joinInline(
+          flattenSkills(content)
+            .slice(0, 6)
+            .map((skill) => skill.value),
+        )}`,
       ]),
   },
   {
     name: 'about',
     aliases: ['sobre-mim'],
-    description: 'Mostra um resumo profissional.',
+    description: 'Mostra um resumo profissional narrativo.',
     usage: 'about',
-    execute: ({ content }) => print([content.name, content.title, content.summary]),
+    execute: ({ content }) => print(getAboutLines(content)),
   },
   {
     name: 'projects',
     aliases: ['projetos'],
     description: 'Lista os projetos selecionados.',
     usage: 'projects',
-    execute: ({ content }) =>
-      print(
-        content.projects
-          .flatMap((project) => [
-            `${project.name} (${project.year})`,
-            `${project.role}`,
-            `${project.summary}`,
-            '',
-          ])
-          .slice(0, -1),
-      ),
+    execute: ({ content }) => print(getProjectLines(content)),
   },
   {
     name: 'experience',
@@ -182,8 +236,7 @@ const createCommandList = (): TerminalCommandDefinition[] => [
     aliases: ['habilidades'],
     description: 'Mostra as principais habilidades técnicas.',
     usage: 'skills',
-    execute: ({ content }) =>
-      print(['Habilidades:', ...flattenSkills(content).map((skill) => `- ${skill.value}`)]),
+    execute: ({ content }) => print(getSkillLines(content)),
   },
   {
     name: 'education',
@@ -281,7 +334,9 @@ const createCommandList = (): TerminalCommandDefinition[] => [
 
       if (!target) {
         return print(
-          ['Uso: cat <about|experience|projects|skills|education|certifications|languages|contact|resume>'],
+          [
+            'Uso: cat <about|experience|projects|skills|education|certifications|languages|contact|resume>',
+          ],
           'error',
         )
       }
@@ -317,20 +372,47 @@ const createCommandList = (): TerminalCommandDefinition[] => [
     usage: 'clear',
     execute: () => ({ type: 'clear' }),
   },
+  {
+    name: 'rm -rf',
+    aliases: ['rm'],
+    description: 'Easter egg',
+    usage: 'rm -rf',
+    hidden: true,
+    execute: () => print(['Melhor não fazer isso...'], 'error'),
+  },
+  {
+    name: 'sudo',
+    description: 'Easter egg',
+    usage: 'sudo',
+    hidden: true,
+    execute: () =>
+      print(['Se você quer ter permissão, melhor subir o projeto localmente.'], 'system'),
+  },
+  {
+    name: 'git',
+    description: 'Easter egg',
+    usage: 'git',
+    hidden: true,
+    execute: () => print(['Terminal errado...'], 'system'),
+  },
+  {
+    name: 'can it run doom',
+    description: 'Easter egg',
+    usage: 'can it run doom',
+    hidden: true,
+    execute: () => print(['Ainda não...'], 'system'),
+  },
 ]
 
 export const getTerminalCommands = (_content: PortfolioContent) => createCommandList()
 
-export const findTerminalCommand = (
-  commands: TerminalCommandDefinition[],
-  rawInput: string,
-) => {
-  const normalizedInput = rawInput.trim().toLowerCase().split(/\s+/)[0] ?? ''
+export const findTerminalCommand = (commands: TerminalCommandDefinition[], rawInput: string) => {
+  const normalizedInput = normalizeCommandInput(rawInput)
 
-  return commands.find((command) => {
-    const aliases = command.aliases ?? []
-    return command.name === normalizedInput || aliases.includes(normalizedInput)
-  })
+  return commands
+    .slice()
+    .sort((current, next) => next.name.length - current.name.length)
+    .find((command) => getCommandMatch(command, normalizedInput))
 }
 
 export const executeTerminalCommand = (
@@ -339,8 +421,8 @@ export const executeTerminalCommand = (
   rawInput: string,
 ) => {
   const normalizedInput = rawInput.trim()
-  const [commandName, ...args] = normalizedInput.split(/\s+/)
-  const command = findTerminalCommand(commands, commandName ?? '')
+  const normalizedCommandInput = normalizeCommandInput(normalizedInput)
+  const command = findTerminalCommand(commands, normalizedInput)
 
   if (!command) {
     return print(
@@ -351,6 +433,16 @@ export const executeTerminalCommand = (
       'error',
     )
   }
+
+  const matchedTrigger = getCommandMatch(command, normalizedCommandInput)
+  const args = matchedTrigger
+    ? normalizedInput
+        .replace(/^\//, '')
+        .slice(matchedTrigger.length)
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean)
+    : []
 
   const context: TerminalCommandContext = {
     content,

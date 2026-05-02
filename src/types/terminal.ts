@@ -46,5 +46,6 @@ export type TerminalCommandDefinition = {
   aliases?: string[]
   description: string
   usage?: string
+  hidden?: boolean
   execute: (context: TerminalCommandContext) => TerminalCommandResult
 }

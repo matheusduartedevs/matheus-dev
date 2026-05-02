@@ -46,6 +46,7 @@ export const useTerminalSession = (content: PortfolioContent) => {
   const commandHistory = ref<string[]>([])
   const historyIndex = ref(commandHistory.value.length)
   const isLoading = ref(false)
+  const visibleCommands = commands.filter((command) => !command.hidden)
   let loadingInterval: number | null = null
   let loadingTimeout: number | null = null
   let resolveLoadingTimeout: (() => void) | null = null
@@ -60,14 +61,14 @@ export const useTerminalSession = (content: PortfolioContent) => {
     }
 
     const normalizedInput = trimmedInput.value.toLowerCase()
-    const exactMatch = findTerminalCommand(commands, normalizedInput)
+    const exactMatch = findTerminalCommand(visibleCommands, normalizedInput)
 
     if (exactMatch) {
       return exactMatch
     }
 
     return (
-      commands.find((command) => {
+      visibleCommands.find((command) => {
         const aliases = command.aliases ?? []
 
         return (
@@ -84,7 +85,7 @@ export const useTerminalSession = (content: PortfolioContent) => {
       return []
     }
 
-    return commands
+    return visibleCommands
       .filter((command) => {
         const aliases = command.aliases ?? []
 
