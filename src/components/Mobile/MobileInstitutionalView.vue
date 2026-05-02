@@ -82,6 +82,9 @@ const groupedSkills = computed(() => {
           </div>
           <h3 class="mobile-card-title">{{ project.name }}</h3>
           <p class="mobile-body">{{ project.summary }}</p>
+          <ul class="mobile-list">
+            <li v-for="highlight in project.highlights" :key="highlight">{{ highlight }}</li>
+          </ul>
         </article>
       </div>
     </section>
@@ -105,7 +108,9 @@ const groupedSkills = computed(() => {
           <h3 class="mobile-card-title">{{ entry.role }}</h3>
           <p class="mobile-body">{{ entry.summary }}</p>
           <ul class="mobile-list">
-            <li v-for="highlight in entry.highlights.slice(0, 4)" :key="highlight">{{ highlight }}</li>
+            <li v-for="highlight in entry.highlights.slice(0, 4)" :key="highlight">
+              {{ highlight }}
+            </li>
           </ul>
         </article>
       </div>
@@ -134,7 +139,9 @@ const groupedSkills = computed(() => {
       <article class="mobile-subsection">
         <div class="mobile-section__intro">
           <h2 class="mobile-section-title">Formação</h2>
-          <p class="mobile-body">Formação acadêmica e base técnica construída ao longo da graduação.</p>
+          <p class="mobile-body">
+            Formação acadêmica e base técnica construída ao longo da graduação.
+          </p>
         </div>
 
         <div class="mobile-card-list">
@@ -165,7 +172,9 @@ const groupedSkills = computed(() => {
               <span>{{ item.name }}</span>
               <span>{{ item.level }}</span>
             </div>
-            <p class="mobile-body">{{ item.detail ?? 'Uso em contexto profissional e colaboração.' }}</p>
+            <p class="mobile-body">
+              {{ item.detail ?? 'Uso em contexto profissional e colaboração.' }}
+            </p>
           </article>
         </div>
       </article>
@@ -174,11 +183,17 @@ const groupedSkills = computed(() => {
     <section class="mobile-section">
       <div class="mobile-section__intro">
         <h2 class="mobile-section-title">Certificações</h2>
-        <p class="mobile-body">Certificações complementares em idioma, segurança e desenvolvimento.</p>
+        <p class="mobile-body">
+          Certificações complementares em idioma, segurança e desenvolvimento.
+        </p>
       </div>
 
       <div class="mobile-card-list">
-        <article v-for="item in content.certifications" :key="`${item.name}-${item.year}`" class="mobile-card">
+        <article
+          v-for="item in content.certifications"
+          :key="`${item.name}-${item.year}`"
+          class="mobile-card"
+        >
           <div class="mobile-card-meta">
             <span>{{ item.issuer }}</span>
             <span>{{ item.year }}</span>

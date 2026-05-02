@@ -8,6 +8,7 @@ export type PortfolioProject = {
   summary: string
   role: string
   year: string
+  highlights: string[]
 }
 
 export type PortfolioExperience = {
@@ -60,10 +61,30 @@ export type PortfolioResume = {
   sourceFilePath: string
 }
 
+export type PortfolioTextTone = 'default' | 'accent' | 'success' | 'muted'
+
+export type PortfolioTextLine =
+  | string
+  | {
+      text: string
+      tone?: PortfolioTextTone
+    }
+
+export type PortfolioAboutSection = {
+  title: string
+  lines: PortfolioTextLine[]
+}
+
+export type PortfolioAbout = {
+  sections: PortfolioAboutSection[]
+  cta: string
+}
+
 export type PortfolioContent = {
   name: string
   title: string
   summary: string
+  about: PortfolioAbout
   desktopIntro: string
   mobileIntro: string
   skills: PortfolioSkillSection[]

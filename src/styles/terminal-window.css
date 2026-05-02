@@ -123,7 +123,7 @@
 }
 
 .terminal-window__entry.is-animated {
-  animation: terminal-entry-fade-in 220ms ease-out;
+  animation: terminal-entry-fade-in 420ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .terminal-window__entry.is-loading .terminal-window__line::after {
@@ -154,6 +154,23 @@
   margin: 0;
   line-height: 1.7;
   white-space: pre-wrap;
+}
+
+.terminal-window__line--heading {
+  color: #f5b97f;
+  font-weight: 800;
+}
+
+.terminal-window__line--accent {
+  color: #ffb36f;
+}
+
+.terminal-window__line--success {
+  color: #78dda0;
+}
+
+.terminal-window__line--muted {
+  color: color-mix(in srgb, currentColor 64%, transparent);
 }
 
 .terminal-window__prompt {
@@ -291,11 +308,13 @@
 @keyframes terminal-entry-fade-in {
   from {
     opacity: 0;
-    transform: translateY(0.2rem);
+    filter: blur(0.18rem);
+    transform: translateY(0.7rem) scale(0.985);
   }
 
   to {
     opacity: 1;
+    filter: blur(0);
     transform: translateY(0);
   }
 }

@@ -3,6 +3,7 @@ import { nextTick, onMounted, ref, watch } from 'vue'
 
 import { useTerminalSession } from '@/composables/useTerminalSession'
 import type { PortfolioContent } from '@/types/portfolio'
+import type { TerminalLine } from '@/types/terminal'
 import type { OsTheme } from '@/types/theme'
 
 const props = defineProps<{
@@ -56,6 +57,10 @@ const promptValue =
     : props.theme === 'linux'
       ? 'matheus@portfolio:~$'
       : 'matheus@portfolio %'
+
+const getLineText = (line: TerminalLine) => (typeof line === 'string' ? line : line.text)
+const getLineTone = (line: TerminalLine) =>
+  typeof line === 'string' ? 'default' : (line.tone ?? 'default')
 
 watch(
   entries,
@@ -165,6 +170,7 @@ const onInputKeydown = (event: KeyboardEvent) => {
             v-for="(line, lineIndex) in entry.lines"
             :key="`${entry.id}-${lineIndex}`"
             class="terminal-window__line"
+            :class="`terminal-window__line--${getLineTone(line)}`"
           >
             <span
               v-if="entry.tone === 'input' && lineIndex === 0"
@@ -173,7 +179,7 @@ const onInputKeydown = (event: KeyboardEvent) => {
             >
               {{ promptValue }}
             </span>
-            <span>{{ line }}</span>
+            <span>{{ getLineText(line) }}</span>
           </p>
         </div>
       </div>

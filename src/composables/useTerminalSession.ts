@@ -7,7 +7,7 @@ import {
   getTerminalCommands,
 } from '@/lib/terminal/commands'
 import type { PortfolioContent } from '@/types/portfolio'
-import type { TerminalCommandDefinition, TerminalEntry } from '@/types/terminal'
+import type { TerminalCommandDefinition, TerminalEntry, TerminalLine } from '@/types/terminal'
 
 const loadingMessage = 'Consultando portfólio'
 
@@ -121,7 +121,7 @@ export const useTerminalSession = (content: PortfolioContent) => {
     return `Sugestão: ${hintedCommand.value.name}`
   })
 
-  const appendEntry = (tone: TerminalEntry['tone'], lines: string[]) => {
+  const appendEntry = (tone: TerminalEntry['tone'], lines: TerminalLine[]) => {
     const entry: TerminalEntry = {
       id: createEntryId(),
       tone,
@@ -136,7 +136,7 @@ export const useTerminalSession = (content: PortfolioContent) => {
     return entry.id
   }
 
-  const updateEntry = (entryId: string, lines: string[]) => {
+  const updateEntry = (entryId: string, lines: TerminalLine[]) => {
     const entry = entries.value.find((item) => item.id === entryId)
 
     if (!entry) {
@@ -197,10 +197,16 @@ export const useTerminalSession = (content: PortfolioContent) => {
     historyIndex.value = commandHistory.value.length
 
     const result = executeTerminalCommand(commands, content, normalizedInput)
+    commandInput.value = ''
+
+    if (result.type === 'clear') {
+      entries.value = createInitialEntries()
+      return
+    }
+
     const loadingEntryId = appendEntry('loading', [loadingMessage])
     isLoading.value = true
     startLoadingAnimation(loadingEntryId)
-    commandInput.value = ''
 
     await new Promise<void>((resolve) => {
       resolveLoadingTimeout = resolve
@@ -218,9 +224,7 @@ export const useTerminalSession = (content: PortfolioContent) => {
     stopLoadingAnimation()
     removeEntry(loadingEntryId)
 
-    if (result.type === 'clear') {
-      entries.value = createInitialEntries()
-    } else if (result.type === 'navigate') {
+    if (result.type === 'navigate') {
       desktopStore.openBrowserPage(result.page)
       appendEntry(result.tone ?? 'system', result.lines)
     } else {

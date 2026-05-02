@@ -4,7 +4,7 @@ import { storeToRefs } from 'pinia'
 
 import { getResumeDownloadHref, getResumeOpenHref, getResumeViewerHref } from '@/lib/resume'
 import { useDesktopStore } from '@/stores/desktop'
-import type { PortfolioContent, PortfolioSkill } from '@/types/portfolio'
+import type { PortfolioContent } from '@/types/portfolio'
 import type { OsTheme } from '@/types/theme'
 
 const props = defineProps<{
@@ -25,20 +25,6 @@ const currentAddress = computed(() =>
 const primaryContacts = computed(() =>
   props.content.contacts.filter((contact) => !contact.href.startsWith('#')).slice(0, 2),
 )
-
-const flatSkills = computed<PortfolioSkill[]>(() => props.content.skills.flatMap((section) => section.items))
-
-const visibleSkills = computed(() => flatSkills.value.slice(0, 18))
-
-const skillColumns = computed(() => {
-  const columns: PortfolioSkill[][] = [[], [], []]
-
-  visibleSkills.value.forEach((skill, index) => {
-    columns[index % columns.length]?.push(skill)
-  })
-
-  return columns
-})
 
 const resumeFrameKey = computed(() => `${currentBrowserPage.value}-${browserRefreshKey.value}`)
 const homePageKey = computed(() => `home-${browserRefreshKey.value}`)
@@ -165,18 +151,27 @@ watch(
             <span class="browser-editorial__index">01</span>
             <div>
               <p class="browser-editorial__section-label">Destaques</p>
-              <h2 class="browser-editorial__section-title">Projetos com contexto, impacto e responsabilidade técnica.</h2>
+              <h2 class="browser-editorial__section-title">
+                Projetos com contexto, impacto e responsabilidade técnica.
+              </h2>
             </div>
           </div>
 
           <div class="browser-editorial__project-list">
-            <article v-for="project in content.projects" :key="project.name" class="browser-editorial__project">
+            <article
+              v-for="project in content.projects"
+              :key="project.name"
+              class="browser-editorial__project"
+            >
               <div class="browser-editorial__project-meta">
                 <span>{{ project.year }}</span>
                 <strong>{{ project.name }}</strong>
               </div>
               <p class="browser-editorial__project-role">{{ project.role }}</p>
               <p class="browser-editorial__project-summary">{{ project.summary }}</p>
+              <ul class="browser-editorial__project-highlights">
+                <li v-for="highlight in project.highlights" :key="highlight">{{ highlight }}</li>
+              </ul>
             </article>
           </div>
         </section>
@@ -186,7 +181,9 @@ watch(
             <span class="browser-editorial__index">02</span>
             <div>
               <p class="browser-editorial__section-label">Experiência</p>
-              <h2 class="browser-editorial__section-title">Trajetória orientada por produto, qualidade e fluxos críticos.</h2>
+              <h2 class="browser-editorial__section-title">
+                Trajetória orientada por produto, qualidade e fluxos críticos.
+              </h2>
             </div>
           </div>
 
@@ -217,14 +214,25 @@ watch(
             <span class="browser-editorial__index">03</span>
             <div>
               <p class="browser-editorial__section-label">Habilidades</p>
-              <h2 class="browser-editorial__section-title">Stack principal, ferramentas e repertório técnico em produção.</h2>
+              <h2 class="browser-editorial__section-title">
+                Stack principal, ferramentas e repertório técnico em produção.
+              </h2>
             </div>
           </div>
 
           <div class="browser-editorial__capabilities">
             <div class="browser-editorial__skill-columns">
-              <div v-for="(column, index) in skillColumns" :key="index" class="browser-editorial__skill-column">
-                <span v-for="skill in column" :key="skill.value" class="browser-editorial__skill">
+              <div
+                v-for="section in content.skills"
+                :key="section.title"
+                class="browser-editorial__skill-column"
+              >
+                <strong class="browser-editorial__skill-column-title">{{ section.title }}</strong>
+                <span
+                  v-for="skill in section.items"
+                  :key="skill.value"
+                  class="browser-editorial__skill"
+                >
                   {{ skill.value }}
                 </span>
               </div>
@@ -237,7 +245,9 @@ watch(
             <span class="browser-editorial__index">04</span>
             <div>
               <p class="browser-editorial__section-label">Educação</p>
-              <h2 class="browser-editorial__section-title">Formação acadêmica e base técnica construída ao longo da graduação.</h2>
+              <h2 class="browser-editorial__section-title">
+                Formação acadêmica e base técnica construída ao longo da graduação.
+              </h2>
             </div>
           </div>
 
@@ -260,7 +270,9 @@ watch(
             <span class="browser-editorial__index">05</span>
             <div>
               <p class="browser-editorial__section-label">Certificações</p>
-              <h2 class="browser-editorial__section-title">Certificações complementares em idioma, segurança e desenvolvimento.</h2>
+              <h2 class="browser-editorial__section-title">
+                Certificações complementares em idioma, segurança e desenvolvimento.
+              </h2>
             </div>
           </div>
 
@@ -289,7 +301,11 @@ watch(
 
           <div class="browser-editorial__stack">
             <div class="browser-editorial__language-list">
-              <div v-for="item in content.languages" :key="item.name" class="browser-editorial__language-item">
+              <div
+                v-for="item in content.languages"
+                :key="item.name"
+                class="browser-editorial__language-item"
+              >
                 <strong>{{ item.name }}</strong>
                 <span>{{ item.level }}</span>
                 <p>{{ item.detail }}</p>
@@ -345,7 +361,12 @@ watch(
           </div>
 
           <div class="browser-resume__actions">
-            <a class="browser-app__cta" :href="getResumeOpenHref(content.resume)" target="_blank" rel="noreferrer">
+            <a
+              class="browser-app__cta"
+              :href="getResumeOpenHref(content.resume)"
+              target="_blank"
+              rel="noreferrer"
+            >
               Abrir externamente
             </a>
             <a
