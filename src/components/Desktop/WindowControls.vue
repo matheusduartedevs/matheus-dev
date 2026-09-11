@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import type { DesktopWindowMode } from '@/types/desktop'
 import type { OsTheme } from '@/types/theme'
 
 defineProps<{
   theme: OsTheme
+  windowMode: DesktopWindowMode
 }>()
 
 defineEmits<{
@@ -20,16 +22,19 @@ defineEmits<{
     <button
       class="window-controls__macos-action window-controls__macos-action--close"
       type="button"
+      aria-label="Fechar janela"
       @click.stop="$emit('close')"
     />
     <button
       class="window-controls__macos-action window-controls__macos-action--minimize"
       type="button"
+      aria-label="Minimizar janela"
       @click.stop="$emit('minimize')"
     />
     <button
       class="window-controls__macos-action window-controls__macos-action--maximize"
       type="button"
+      :aria-label="windowMode === 'fullscreen' ? 'Restaurar janela' : 'Maximizar janela'"
       @click.stop="$emit('maximize')"
     />
   </div>
@@ -43,6 +48,7 @@ defineEmits<{
       class="window-controls__system-action window-controls__system-action--minimize"
       :class="`window-controls__system-action--${theme}`"
       type="button"
+      aria-label="Minimizar janela"
       @click.stop="$emit('minimize')"
     >
       <span />
@@ -51,7 +57,7 @@ defineEmits<{
       class="window-controls__system-action window-controls__system-action--maximize"
       :class="`window-controls__system-action--${theme}`"
       type="button"
-      aria-label="maximize"
+      :aria-label="windowMode === 'fullscreen' ? 'Restaurar janela' : 'Maximizar janela'"
       @click.stop="$emit('maximize')"
     >
       <span />
@@ -60,6 +66,7 @@ defineEmits<{
       class="window-controls__system-action window-controls__system-action--close"
       :class="`window-controls__system-action--${theme}`"
       type="button"
+      aria-label="Fechar janela"
       @click.stop="$emit('close')"
     >
       <span />

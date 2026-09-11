@@ -8,6 +8,10 @@ const props = defineProps<{
   content: PortfolioContent
 }>()
 
+const primaryContacts = computed(() =>
+  props.content.contacts.filter((contact) => !contact.href.startsWith('#')).slice(0, 2),
+)
+
 const groupedSkills = computed(() => {
   return props.content.skills.map((section) => ({
     title: section.title,
@@ -41,7 +45,7 @@ const groupedSkills = computed(() => {
         </a>
 
         <a
-          v-for="contact in content.contacts.slice(0, 2)"
+          v-for="contact in primaryContacts"
           :key="contact.label"
           class="mobile-hero__action-link"
           :href="contact.href"
@@ -211,17 +215,18 @@ const groupedSkills = computed(() => {
       </div>
 
       <div class="mobile-contact-list">
-        <a
+        <component
+          :is="contact.href.startsWith('#') ? 'div' : 'a'"
           v-for="contact in content.contacts"
           :key="contact.label"
           class="mobile-contact-link"
-          :href="contact.href"
+          :href="contact.href.startsWith('#') ? undefined : contact.href"
           :target="contact.href.startsWith('#') ? undefined : '_blank'"
           :rel="contact.href.startsWith('#') ? undefined : 'noreferrer'"
         >
           <span>{{ contact.label }}</span>
           <strong>{{ contact.value }}</strong>
-        </a>
+        </component>
 
         <a
           class="mobile-contact-link mobile-contact-link--resume"

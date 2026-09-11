@@ -7,6 +7,8 @@
 }
 
 .mobile-page {
+  min-width: 0;
+  overflow-wrap: anywhere;
   --mobile-bg: #0d1733;
   --mobile-bg-alt: #182449;
   --mobile-panel: rgba(13, 26, 58, 0.82);
@@ -89,7 +91,9 @@
 }
 
 .mobile-hero__header {
-  grid-template-columns: minmax(0, 1fr) auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
   gap: 0.75rem;
   align-items: center;
 }
@@ -215,6 +219,7 @@
 }
 
 .mobile-skill-sections {
+  min-width: 0;
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: 100%;
@@ -227,6 +232,7 @@
 }
 
 .mobile-skill-card {
+  min-width: 0;
   align-content: start;
   scroll-snap-align: start;
 }
@@ -242,7 +248,9 @@
   color: var(--mobile-text);
   font-size: 0.92rem;
   line-height: 1.35;
-  white-space: nowrap;
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .mobile-skill-sections::-webkit-scrollbar {

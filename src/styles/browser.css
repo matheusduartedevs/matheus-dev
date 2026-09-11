@@ -591,7 +591,7 @@
     border-color 180ms ease;
 }
 
-.browser-editorial__contact-item:hover,
+.browser-editorial__contact-item:is(a, button):hover,
 .browser-editorial__primary-link:hover {
   transform: translateX(0.12rem);
   border-color: color-mix(in srgb, var(--color-accent) 42%, var(--color-border-subtle));

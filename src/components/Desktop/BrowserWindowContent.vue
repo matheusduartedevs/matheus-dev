@@ -58,6 +58,7 @@ watch(
           type="button"
           class="browser-app__tab"
           :class="{ 'is-active': currentBrowserPage === 'home' }"
+          :aria-current="currentBrowserPage === 'home' ? 'page' : undefined"
           @click="openHomePage"
         >
           <span class="browser-app__tab-label">Início</span>
@@ -67,6 +68,7 @@ watch(
           type="button"
           class="browser-app__tab"
           :class="{ 'is-active': currentBrowserPage === 'resume' }"
+          :aria-current="currentBrowserPage === 'resume' ? 'page' : undefined"
           @click="openResumePage"
         >
           <span class="browser-app__tab-label">Currículo</span>
@@ -78,7 +80,7 @@ watch(
           <button
             type="button"
             class="browser-app__icon-button"
-            aria-label="Go back"
+            aria-label="Voltar"
             :disabled="!canGoBackBrowser"
             @click="desktopStore.goBackBrowser()"
           >
@@ -87,7 +89,7 @@ watch(
           <button
             type="button"
             class="browser-app__icon-button"
-            aria-label="Go forward"
+            aria-label="Avançar"
             :disabled="!canGoForwardBrowser"
             @click="desktopStore.goForwardBrowser()"
           >
@@ -96,7 +98,7 @@ watch(
           <button
             type="button"
             class="browser-app__icon-button"
-            aria-label="Refresh"
+            aria-label="Recarregar"
             @click="desktopStore.refreshBrowserPage()"
           >
             ↻
@@ -325,17 +327,18 @@ watch(
 
           <div class="browser-editorial__stack">
             <div class="browser-editorial__contact-list">
-              <a
+              <component
+                :is="contact.href.startsWith('#') ? 'div' : 'a'"
                 v-for="contact in content.contacts"
                 :key="contact.label"
                 class="browser-editorial__contact-item"
-                :href="contact.href"
+                :href="contact.href.startsWith('#') ? undefined : contact.href"
                 :target="contact.href.startsWith('#') ? undefined : '_blank'"
                 :rel="contact.href.startsWith('#') ? undefined : 'noreferrer'"
               >
                 <span>{{ contact.label }}</span>
                 <strong>{{ contact.value }}</strong>
-              </a>
+              </component>
 
               <button
                 type="button"

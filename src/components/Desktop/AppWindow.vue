@@ -263,6 +263,7 @@ const stopResize = (event: PointerEvent) => {
       <WindowControls
         v-if="theme === 'macos'"
         :theme="theme"
+        :window-mode="windowMode"
         @minimize="$emit('minimize')"
         @maximize="$emit('maximize')"
         @close="$emit('close')"
@@ -271,6 +272,7 @@ const stopResize = (event: PointerEvent) => {
       <WindowControls
         v-if="theme !== 'macos'"
         :theme="theme"
+        :window-mode="windowMode"
         @minimize="$emit('minimize')"
         @maximize="$emit('maximize')"
         @close="$emit('close')"
