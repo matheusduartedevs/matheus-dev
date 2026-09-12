@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from 'vue'
+import PortfolioPage from '@/components/Portfolio/PortfolioPage.vue'
 import { storeToRefs } from 'pinia'
 
 import { getResumeDownloadHref, getResumeOpenHref, getResumeViewerHref } from '@/lib/resume'
@@ -7,7 +8,7 @@ import { useDesktopStore } from '@/stores/desktop'
 import type { PortfolioContent } from '@/types/portfolio'
 import type { OsTheme } from '@/types/theme'
 
-const props = defineProps<{
+defineProps<{
   content: PortfolioContent
   theme: OsTheme
 }>()
@@ -20,10 +21,6 @@ const pageViewport = ref<HTMLElement | null>(null)
 
 const currentAddress = computed(() =>
   currentBrowserPage.value === 'resume' ? 'portfolio-os.dev/resume' : 'portfolio-os.dev/home',
-)
-
-const primaryContacts = computed(() =>
-  props.content.contacts.filter((contact) => !contact.href.startsWith('#')).slice(0, 2),
 )
 
 const resumeFrameKey = computed(() => `${currentBrowserPage.value}-${browserRefreshKey.value}`)
@@ -115,253 +112,17 @@ watch(
     </div>
 
     <div ref="pageViewport" class="browser-app__page">
-      <div v-if="currentBrowserPage === 'home'" :key="homePageKey" class="browser-editorial">
-        <section class="browser-editorial__hero">
-          <div class="browser-editorial__lead">
-            <p class="browser-editorial__eyebrow">Frontend engineer</p>
-            <h1 class="browser-editorial__name">{{ content.name }}</h1>
-
-            <div class="browser-editorial__hero-body">
-              <p class="browser-editorial__headline">{{ content.title }}</p>
-              <p class="browser-editorial__summary">{{ content.summary }}</p>
-            </div>
-
-            <div class="browser-editorial__hero-actions">
-              <button type="button" class="browser-app__cta" @click="openResumePage">
-                Abrir currículo
-              </button>
-
-              <div class="browser-editorial__primary-links">
-                <a
-                  v-for="contact in primaryContacts"
-                  :key="contact.label"
-                  class="browser-editorial__primary-link"
-                  :href="contact.href"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <span>{{ contact.label }}</span>
-                  <strong>{{ contact.value }}</strong>
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="browser-editorial__section">
-          <div class="browser-editorial__section-head">
-            <span class="browser-editorial__index">01</span>
-            <div>
-              <p class="browser-editorial__section-label">Destaques</p>
-              <h2 class="browser-editorial__section-title">
-                Projetos com contexto, impacto e responsabilidade técnica.
-              </h2>
-            </div>
-          </div>
-
-          <div class="browser-editorial__project-list">
-            <article
-              v-for="project in content.projects"
-              :key="project.name"
-              class="browser-editorial__project"
-            >
-              <div class="browser-editorial__project-meta">
-                <span>{{ project.year }}</span>
-                <strong>{{ project.name }}</strong>
-              </div>
-              <p class="browser-editorial__project-role">{{ project.role }}</p>
-              <p class="browser-editorial__project-summary">{{ project.summary }}</p>
-              <ul class="browser-editorial__project-highlights">
-                <li v-for="highlight in project.highlights" :key="highlight">{{ highlight }}</li>
-              </ul>
-            </article>
-          </div>
-        </section>
-
-        <section class="browser-editorial__section">
-          <div class="browser-editorial__section-head">
-            <span class="browser-editorial__index">02</span>
-            <div>
-              <p class="browser-editorial__section-label">Experiência</p>
-              <h2 class="browser-editorial__section-title">
-                Trajetória orientada por produto, qualidade e fluxos críticos.
-              </h2>
-            </div>
-          </div>
-
-          <div class="browser-editorial__experience-list">
-            <article
-              v-for="entry in content.experience"
-              :key="`${entry.company}-${entry.role}`"
-              class="browser-editorial__experience"
-            >
-              <div class="browser-editorial__experience-meta">
-                <span>{{ entry.period }}</span>
-                <strong>{{ entry.role }}</strong>
-                <p>{{ entry.company }}</p>
-              </div>
-
-              <div class="browser-editorial__experience-body">
-                <p>{{ entry.summary }}</p>
-                <ul class="browser-editorial__experience-points">
-                  <li v-for="highlight in entry.highlights" :key="highlight">{{ highlight }}</li>
-                </ul>
-              </div>
-            </article>
-          </div>
-        </section>
-
-        <section class="browser-editorial__section browser-editorial__section--capabilities">
-          <div class="browser-editorial__section-head">
-            <span class="browser-editorial__index">03</span>
-            <div>
-              <p class="browser-editorial__section-label">Habilidades</p>
-              <h2 class="browser-editorial__section-title">
-                Stack principal, ferramentas e repertório técnico em produção.
-              </h2>
-            </div>
-          </div>
-
-          <div class="browser-editorial__capabilities">
-            <div class="browser-editorial__skill-columns">
-              <div
-                v-for="section in content.skills"
-                :key="section.title"
-                class="browser-editorial__skill-column"
-              >
-                <strong class="browser-editorial__skill-column-title">{{ section.title }}</strong>
-                <span
-                  v-for="skill in section.items"
-                  :key="skill.value"
-                  class="browser-editorial__skill"
-                >
-                  {{ skill.value }}
-                </span>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="browser-editorial__section browser-editorial__section--footer">
-          <div class="browser-editorial__section-head">
-            <span class="browser-editorial__index">04</span>
-            <div>
-              <p class="browser-editorial__section-label">Educação</p>
-              <h2 class="browser-editorial__section-title">
-                Formação acadêmica e base técnica construída ao longo da graduação.
-              </h2>
-            </div>
-          </div>
-
-          <div class="browser-editorial__stack">
-            <article
-              v-for="item in content.education"
-              :key="`${item.institution}-${item.program}`"
-              class="browser-editorial__stack-item"
-            >
-              <span>{{ item.period }}</span>
-              <strong>{{ item.program }}</strong>
-              <p>{{ item.institution }}</p>
-              <p>{{ item.summary }}</p>
-            </article>
-          </div>
-        </section>
-
-        <section class="browser-editorial__section browser-editorial__section--footer">
-          <div class="browser-editorial__section-head">
-            <span class="browser-editorial__index">05</span>
-            <div>
-              <p class="browser-editorial__section-label">Certificações</p>
-              <h2 class="browser-editorial__section-title">
-                Certificações complementares em idioma, segurança e desenvolvimento.
-              </h2>
-            </div>
-          </div>
-
-          <div class="browser-editorial__stack">
-            <article
-              v-for="item in content.certifications"
-              :key="`${item.name}-${item.year}`"
-              class="browser-editorial__stack-item"
-            >
-              <span>{{ item.year }}</span>
-              <strong>{{ item.name }}</strong>
-              <p>{{ item.issuer }}</p>
-              <p>{{ item.summary }}</p>
-            </article>
-          </div>
-        </section>
-
-        <section class="browser-editorial__section browser-editorial__section--footer">
-          <div class="browser-editorial__section-head">
-            <span class="browser-editorial__index">06</span>
-            <div>
-              <p class="browser-editorial__section-label">Idiomas</p>
-              <h2 class="browser-editorial__section-title">Idiomas e nível de proficiência.</h2>
-            </div>
-          </div>
-
-          <div class="browser-editorial__stack">
-            <div class="browser-editorial__language-list">
-              <div
-                v-for="item in content.languages"
-                :key="item.name"
-                class="browser-editorial__language-item"
-              >
-                <strong>{{ item.name }}</strong>
-                <span>{{ item.level }}</span>
-                <p>{{ item.detail }}</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="browser-editorial__section browser-editorial__section--footer">
-          <div class="browser-editorial__section-head">
-            <span class="browser-editorial__index">07</span>
-            <div>
-              <p class="browser-editorial__section-label">Contato</p>
-              <h2 class="browser-editorial__section-title">Vamos nos conectar!</h2>
-            </div>
-          </div>
-
-          <div class="browser-editorial__stack">
-            <div class="browser-editorial__contact-list">
-              <component
-                :is="contact.href.startsWith('#') ? 'div' : 'a'"
-                v-for="contact in content.contacts"
-                :key="contact.label"
-                class="browser-editorial__contact-item"
-                :href="contact.href.startsWith('#') ? undefined : contact.href"
-                :target="contact.href.startsWith('#') ? undefined : '_blank'"
-                :rel="contact.href.startsWith('#') ? undefined : 'noreferrer'"
-              >
-                <span>{{ contact.label }}</span>
-                <strong>{{ contact.value }}</strong>
-              </component>
-
-              <button
-                type="button"
-                class="browser-editorial__contact-item browser-editorial__contact-item--resume"
-                @click="openResumePage"
-              >
-                <span>Currículo</span>
-                <strong>{{ content.resume.label }}</strong>
-              </button>
-            </div>
-          </div>
-        </section>
-      </div>
+      <PortfolioPage
+        v-if="currentBrowserPage === 'home'"
+        :key="homePageKey"
+        :content="content"
+        embedded
+        @open-resume="openResumePage"
+      />
 
       <div v-else class="browser-resume">
         <section class="browser-resume__hero">
-          <div class="browser-editorial__section-head">
-            <span class="browser-editorial__index">08</span>
-            <div>
-              <p class="browser-editorial__section-label">Currículo</p>
-              <h2 class="browser-editorial__section-title">{{ content.resume.label }}</h2>
-            </div>
-          </div>
+          <h1 class="browser-resume__title">{{ content.resume.label }}</h1>
 
           <div class="browser-resume__actions">
             <a
